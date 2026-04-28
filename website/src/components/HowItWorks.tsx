@@ -2,41 +2,19 @@ import guide1 from '../assets/guide-1.png'
 import guide2 from '../assets/guide-2.png'
 import guide3 from '../assets/guide-3.png'
 import guide4 from '../assets/guide-4.png'
+import { useLanguage } from '../contexts/language'
+import type { Translations } from '../locales/en'
 
-const STEPS = [
-  {
-    n: '01',
-    title: 'OPEN USAGE SETTINGS',
-    body: 'Go to claude.ai/settings/usage — this is where Claude shows your current session and weekly usage limits.',
-    img: guide1,
-  },
-  {
-    n: '02',
-    title: 'OPEN DEVTOOLS NETWORK TAB',
-    body: 'Press Cmd+Option+I to open Developer Tools, then click the Network tab. Make sure "Fetch/XHR" filter is selected.',
-    img: guide2,
-  },
-  {
-    n: '03',
-    title: 'COPY THE COOKIE',
-    body: 'Refresh the page, click the "usage" request in the list, go to the Headers tab, and copy the full "Cookie" value from Request Headers.',
-    img: guide3,
-  },
-  {
-    n: '04',
-    title: 'ADD ACCOUNT TO THE APP',
-    body: 'Open Claude Usage Monitor from your menu bar, click "+", give the account a label, paste the cookie, and hit Save Account.',
-    img: guide4,
-  },
-]
+const IMGS = [guide1, guide2, guide3, guide4]
 
 interface StepProps {
-  step: typeof STEPS[number]
+  step: Translations['howItWorks']['steps'][number]
+  img: string
   index: number
   last: boolean
 }
 
-function Step({ step, index, last }: StepProps) {
+function Step({ step, img, index, last }: StepProps) {
   const isEven = index % 2 === 0
   const isDark = !isEven
 
@@ -49,8 +27,8 @@ function Step({ step, index, last }: StepProps) {
           ? 'order-first md:border-r-2 md:border-ink'
           : 'order-first md:order-last bg-ink md:border-l-2 md:border-ink',
       ].join(' ')}>
-        <p className="font-display text-[72px] text-primary leading-none mb-6 tracking-[-0.04em]">{step.n}</p>
-        <p className={`font-display text-[20px] uppercase mb-4 tracking-[-0.01em] ${isDark ? 'text-paper' : 'text-ink'}`}>{step.title}</p>
+        <p className="font-display text-[72px] text-primary leading-none mb-6">{step.n}</p>
+        <p className={`font-display text-[20px] uppercase mb-4 ${isDark ? 'text-paper' : 'text-ink'}`}>{step.title}</p>
         <p className={`font-mono text-[13px] leading-[1.8] max-w-[380px] ${isDark ? 'text-[#777]' : 'text-[#3A3A3A]'}`}>{step.body}</p>
       </div>
 
@@ -70,7 +48,7 @@ function Step({ step, index, last }: StepProps) {
               <span className="font-mono text-[9px] text-muted">claude.ai/settings/usage</span>
             </div>
           </div>
-          <img src={step.img} alt={step.title} className="w-full block object-cover" />
+          <img src={img} alt={step.title} className="w-full block object-cover" />
         </div>
       </div>
     </div>
@@ -78,18 +56,19 @@ function Step({ step, index, last }: StepProps) {
 }
 
 export default function HowItWorks() {
+  const { t } = useLanguage()
   return (
     <section id="how-it-works" className="border-b-2 border-ink pb-12">
       <div className="container">
         <div className="flex justify-between items-baseline pt-12 pb-9 border-b border-ink/20">
-          <h2 className="font-display text-[clamp(26px,4vw,44px)] tracking-[-0.03em] uppercase text-ink">SETUP GUIDE</h2>
-          <span className="font-mono text-[11px] text-muted tracking-[0.1em] uppercase">04 STEPS</span>
+          <h2 className="font-display text-[clamp(26px,4vw,44px)] uppercase text-ink">{t.howItWorks.heading}</h2>
+          <span className="font-mono text-[11px] text-muted tracking-[0.1em] uppercase">{t.howItWorks.count}</span>
         </div>
       </div>
 
-      {STEPS.map((step, i) => (
+      {t.howItWorks.steps.map((step, i) => (
         <div key={step.n} className="container">
-          <Step step={step} index={i} last={i === STEPS.length - 1} />
+          <Step step={step} img={IMGS[i]} index={i} last={i === t.howItWorks.steps.length - 1} />
         </div>
       ))}
     </section>

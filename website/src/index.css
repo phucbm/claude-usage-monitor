@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@900&family=JetBrains+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 @source "../src";
 
@@ -14,7 +14,7 @@
   --color-paper:   #F2F0EB;
   --color-muted:   #6B6B6B;
   --font-mono:     'JetBrains Mono', monospace;
-  --font-display:  'Archivo Black', sans-serif;
+  --font-display:  'Lexend', sans-serif;
 }
 
 

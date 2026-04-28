@@ -1,7 +1,8 @@
-import { TICKER_ITEMS } from '../data'
+import { useLanguage } from '../contexts/language'
 
 export default function Ticker() {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS]
+  const { t } = useLanguage()
+  const items = [...t.ticker, ...t.ticker]
   return (
     <div id="ticker" className="border-t-2 border-b-2 border-ink bg-ink overflow-hidden py-[10px]">
       <div className="ticker-track">
