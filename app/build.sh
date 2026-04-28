@@ -25,8 +25,8 @@ if [ -f "ClaudeUsageMonitor.icns" ]; then
 fi
 
 # Copy menu bar icon PNG into bundle
-if [ -f "claude-usage-monitor.png" ]; then
-    cp claude-usage-monitor.png "$APP_PATH/Contents/Resources/"
+if [ -f "icon.png" ]; then
+    cp icon.png "$APP_PATH/Contents/Resources/"
 fi
 
 # Collect all Swift source files

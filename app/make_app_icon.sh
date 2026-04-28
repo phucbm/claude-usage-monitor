@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create app icon from PNG
-PNG_FILE="claude-usage-monitor.png"
+PNG_FILE="icon.png"
 
 if [ ! -f "$PNG_FILE" ]; then
     echo "Error: $PNG_FILE not found"

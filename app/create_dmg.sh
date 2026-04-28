@@ -1,8 +1,8 @@
 #!/bin/bash
 
 APP_NAME="ClaudeUsageMonitor"
-DMG_NAME="${APP_NAME}-Installer"
-VERSION="1.0"
+VERSION="1.0.0"
+DMG_NAME="${APP_NAME}-${VERSION}"
 
 TMP_DIR="dmg_temp"
 rm -rf "$TMP_DIR"

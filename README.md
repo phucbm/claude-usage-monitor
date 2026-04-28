@@ -19,6 +19,14 @@
 - **Pro plan support** — Shows weekly Sonnet usage for Pro subscribers
 - **Menu bar only** — No Dock icon, stays out of your way
 
+## Installation
+
+1. Download `ClaudeUsageMonitor-1.0.0.dmg` from the [latest release](../../releases/latest)
+2. Double-click to mount
+3. Drag `ClaudeUsageMonitor.app` to the Applications folder
+4. Eject the DMG
+5. Open **ClaudeUsageMonitor** from Applications
+
 ## Setup
 
 ### Get your session cookie
