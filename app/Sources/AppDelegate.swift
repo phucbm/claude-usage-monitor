@@ -6,7 +6,7 @@ private let kPanelOriginKey = "FloatingPanelOrigin"
 private let kPanelWidth: CGFloat = 420
 private let kPanelHeight: CGFloat = 520
 private let kPanelMargin: CGFloat = 20
-private let kCornerRadius: CGFloat = 12
+private let kCornerRadius: CGFloat = 0
 
 // MARK: - FloatingPanel
 
@@ -78,13 +78,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     private func createBadgesImage(for accounts: [Account]) -> NSImage {
-        let font = NSFont.systemFont(ofSize: 11, weight: .semibold)
-        let orange = NSColor(red: 1.0, green: 0.48, blue: 0.0, alpha: 1.0)
-        let bg = NSColor(red: 1.0, green: 0.48, blue: 0.0, alpha: 0.13)
+        let font = NSFont(name: "JetBrains Mono", size: 10) ?? NSFont.monospacedDigitSystemFont(ofSize: 10, weight: .bold)
+        let orange = NSColor(red: 0xEA/255, green: 0x60/255, blue: 0x49/255, alpha: 1.0)
+        let bg = NSColor(red: 0xEA/255, green: 0x60/255, blue: 0x49/255, alpha: 0.13)
         let hPad: CGFloat = 5
         let height: CGFloat = 16
         let spacing: CGFloat = 4
-        let radius: CGFloat = 4
+        let radius: CGFloat = 0
 
         let attrs: [NSAttributedString.Key: Any] = [.font: font]
 
@@ -164,23 +164,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         panel.isMovableByWindowBackground = true
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
 
-        // NSVisualEffectView provides the blur context and clips corners
-        let effectView = NSVisualEffectView(frame: NSRect(origin: .zero, size: frame.size))
-        effectView.material = .popover
-        effectView.blendingMode = .behindWindow
-        effectView.state = .active
-        effectView.wantsLayer = true
-        effectView.layer?.cornerRadius = kCornerRadius
-        effectView.layer?.masksToBounds = true
-
-        let hostingView = NSHostingController(
+        let hostingController = NSHostingController(
             rootView: UsageView(accountsManager: accountsManager)
-        ).view
-        hostingView.frame = effectView.bounds
-        hostingView.autoresizingMask = [.width, .height]
-        effectView.addSubview(hostingView)
+        )
+        hostingController.view.frame = NSRect(origin: .zero, size: frame.size)
+        hostingController.view.autoresizingMask = [.width, .height]
 
-        panel.contentView = effectView
+        panel.contentView = hostingController.view
     }
 
     // MARK: - NSWindowDelegate

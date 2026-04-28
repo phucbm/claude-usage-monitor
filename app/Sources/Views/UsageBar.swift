@@ -1,8 +1,8 @@
 import SwiftUI
 
 enum ResetTimeStyle {
-    case relative   // "Resets in X hr Y min"
-    case absolute   // "Resets Sat 4:00 PM"
+    case relative
+    case absolute
 }
 
 struct UsageBar: View {
@@ -13,43 +13,41 @@ struct UsageBar: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            // Label + percentage
             HStack {
-                Text(label)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
+                Text(label.uppercased())
+                    .font(T.mono(10, weight: .medium))
+                    .foregroundColor(T.ink)
+                    .tracking(1)
                 Spacer()
-                Text("\(Int(min(percentage, 1.0) * 100))% used")
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
+                Text("\(Int(min(percentage, 1.0) * 100))%")
+                    .font(T.mono(10, weight: .bold))
+                    .foregroundColor(T.muted)
             }
 
-            // Custom 5pt capsule bar
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(Color.secondary.opacity(0.15))
-                        .frame(height: 5)
-                    Capsule()
+                    Rectangle()
+                        .fill(T.ink.opacity(0.1))
+                        .frame(height: 4)
+                    Rectangle()
                         .fill(barColor(for: percentage))
-                        .frame(width: geo.size.width * min(max(percentage, 0), 1.0), height: 5)
+                        .frame(width: geo.size.width * min(max(percentage, 0), 1.0), height: 4)
                 }
             }
-            .frame(height: 5)
+            .frame(height: 4)
 
-            // Reset subtitle
             if let date = resetsAt {
                 Text(formatReset(date))
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
+                    .font(T.mono(9))
+                    .foregroundColor(T.muted)
             }
         }
     }
 
     private func barColor(for p: Double) -> Color {
-        if p < 0.5 { return Color(red: 0.204, green: 0.780, blue: 0.349) } // #34C759
-        if p < 0.8 { return Color(red: 1.000, green: 0.624, blue: 0.039) } // #FF9F0A
-        return Color(red: 1.000, green: 0.231, blue: 0.188)                // #FF3B30
+        if p < 0.5 { return T.ink.opacity(0.6) }
+        if p < 0.8 { return T.ink.opacity(0.8) }
+        return T.primary
     }
 
     private func formatReset(_ date: Date) -> String {
@@ -59,7 +57,7 @@ struct UsageBar: View {
             guard secs > 0 else { return "Resetting soon" }
             let h = Int(secs) / 3600
             let m = (Int(secs) % 3600) / 60
-            return h > 0 ? "Resets in \(h) hr \(m) min" : "Resets in \(m) min"
+            return h > 0 ? "Resets in \(h)h \(m)m" : "Resets in \(m)m"
         case .absolute:
             let f = DateFormatter()
             f.dateFormat = "EEE h:mm a"

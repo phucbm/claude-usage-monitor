@@ -9,16 +9,9 @@ struct UsageView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Picker("", selection: $selectedTab) {
-                Text("Accounts").tag(0)
-                Text("Settings").tag(1)
-            }
-            .pickerStyle(.segmented)
-            .padding(.horizontal, 16)
-            .padding(.top, 14)
-            .padding(.bottom, 10)
+            tabBar
 
-            Divider()
+            Rectangle().fill(T.ink.opacity(0.18)).frame(height: T.border)
 
             ScrollView(.vertical, showsIndicators: false) {
                 if selectedTab == 0 {
@@ -30,17 +23,48 @@ struct UsageView: View {
             }
             .frame(width: 420)
 
-            Divider()
+            Rectangle().fill(T.ink.opacity(0.18)).frame(height: T.border)
 
-            Link("github.com/phucbm/claude-usage-monitor", destination: URL(string: "https://github.com/phucbm/claude-usage-monitor")!)
-                .font(.caption2)
-                .foregroundColor(.secondary)
-                .padding(.vertical, 7)
+            Link("github.com/phucbm/claude-usage-monitor",
+                 destination: URL(string: "https://github.com/phucbm/claude-usage-monitor")!)
+                .font(T.mono(9, weight: .bold))
+                .foregroundColor(T.muted)
+                .padding(.vertical, 8)
         }
-        .background(Color(nsColor: .windowBackgroundColor))
+        .background(T.paper)
         .frame(width: 420)
         .onAppear { accountsManager.updatePercentagesForAll() }
     }
+
+    // MARK: - Tab bar
+
+    private var tabBar: some View {
+        HStack(spacing: 0) {
+            tabButton("ACCOUNTS", tag: 0)
+            Rectangle().fill(T.ink.opacity(0.18)).frame(width: T.border)
+            tabButton("SETTINGS", tag: 1)
+        }
+        .frame(height: 38)
+    }
+
+    private func tabButton(_ title: String, tag: Int) -> some View {
+        Button(action: { selectedTab = tag }) {
+            Text(title)
+                .font(T.mono(12, weight: selectedTab == tag ? .bold : .medium))
+                .foregroundColor(selectedTab == tag ? T.ink : T.muted)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(selectedTab == tag ? T.ink.opacity(0.06) : Color.clear)
+                .contentShape(Rectangle())
+                .overlay(alignment: .bottom) {
+                    if selectedTab == tag {
+                        Rectangle().fill(T.primary).frame(height: 2)
+                    }
+                }
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Accounts tab
 
     @ViewBuilder
     private var accountsTab: some View {
@@ -48,23 +72,26 @@ struct UsageView: View {
             if accountsManager.accounts.isEmpty {
                 OnboardingView(accountsManager: accountsManager)
             } else {
-                HStack {
-                    Text("Accounts")
-                        .font(.headline)
+                HStack(spacing: 8) {
+                    Text("ACCOUNTS")
+                        .font(T.mono(10, weight: .bold))
+                        .foregroundColor(T.muted)
+                        .tracking(1.5)
                     Spacer()
                     if accountsManager.isLoading {
-                        ProgressView().scaleEffect(0.7).frame(width: 16, height: 16)
+                        Text("LOADING...").font(T.mono(10)).foregroundColor(T.muted)
                     } else {
-                        Button(action: { accountsManager.fetchAllAccounts() }) {
-                            Image(systemName: "arrow.clockwise")
+                        if let time = latestUpdate {
+                            Text(formatTime(time))
+                                .font(T.mono(10))
+                                .foregroundColor(T.muted)
                         }
-                        .buttonStyle(.borderless)
-                        .help("Refresh all")
-                        Button(action: { showingAddAccount = true }) {
-                            Image(systemName: "plus")
+                        labelledButton(icon: "arrow.clockwise", label: "REFRESH") {
+                            accountsManager.fetchAllAccounts()
                         }
-                        .buttonStyle(.borderless)
-                        .help("Add account")
+                        labelledButton(icon: "plus", label: "ADD ACCOUNT") {
+                            showingAddAccount = true
+                        }
                     }
                 }
 
@@ -84,7 +111,6 @@ struct UsageView: View {
                         isActive: accountsManager.activeAccountId == account.id,
                         onSetActive: { accountsManager.setActiveAccount(id: account.id) },
                         onDelete: { accountsManager.deleteAccount(id: account.id) },
-                        onRefresh: { accountsManager.fetchUsage(for: account.id) },
                         onRename: { accountsManager.renameAccount(id: account.id, label: $0) },
                         onToggleMenuBar: { accountsManager.toggleMenuBar(id: account.id, show: $0) }
                     )
@@ -92,5 +118,31 @@ struct UsageView: View {
             }
         }
         .padding(16)
+    }
+
+    // MARK: - Helpers
+
+    private var latestUpdate: Date? {
+        accountsManager.accounts.compactMap(\.lastUpdated).max()
+    }
+
+    private func formatTime(_ date: Date) -> String {
+        let f = DateFormatter(); f.timeStyle = .short; return f.string(from: date)
+    }
+
+    private func labelledButton(icon: String, label: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 4) {
+                Image(systemName: icon).font(.caption2)
+                Text(label).font(T.mono(10, weight: .bold))
+            }
+            .foregroundColor(T.ink)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
+            .frame(minWidth: 44)
+            .overlay(Rectangle().stroke(T.ink.opacity(0.2), lineWidth: T.border))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }

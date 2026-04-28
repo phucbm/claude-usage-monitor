@@ -6,180 +6,170 @@ struct AccountCard: View {
     let isActive: Bool
     let onSetActive: () -> Void
     let onDelete: () -> Void
-    let onRefresh: () -> Void
     let onRename: (String) -> Void
     let onToggleMenuBar: (Bool) -> Void
 
     @State private var isEditingLabel = false
     @State private var editLabel = ""
+    @State private var showDeleteAlert = false
 
     var body: some View {
-        GroupBox {
-            VStack(alignment: .leading, spacing: 12) {
-                if let error = account.errorMessage {
-                    Text(error).font(.callout).foregroundColor(.orange)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                } else if account.hasFetchedData {
-                    usageRings
-
-                    if let updated = account.lastUpdated {
-                        Text("Updated \(formatTime(updated))")
-                            .font(.caption).foregroundColor(.secondary)
-                    }
-                } else {
-                    Text("Fetching...").font(.callout).foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-        } label: {
+        VStack(alignment: .leading, spacing: 0) {
+            // Header
             HStack(spacing: 6) {
-                Circle()
-                    .fill(isActive ? Color.green : Color.secondary.opacity(0.4))
-                    .frame(width: 8, height: 8)
+                Rectangle()
+                    .fill(isActive ? T.primary : T.ink.opacity(0.25))
+                    .frame(width: 7, height: 7)
 
                 if isEditingLabel {
                     TextField("Label", text: $editLabel)
-                        .textFieldStyle(.roundedBorder)
-                        .font(.subheadline)
+                        .font(T.mono(12))
+                        .textFieldStyle(.plain)
+                        .padding(4)
+                        .overlay(Rectangle().stroke(T.ink.opacity(0.3), lineWidth: T.border))
                         .frame(maxWidth: 140)
                         .onSubmit { commitRename() }
-                    Button("Save") { commitRename() }
-                        .buttonStyle(.borderless).font(.footnote).foregroundColor(.accentColor)
-                    Button("Cancel") { isEditingLabel = false }
-                        .buttonStyle(.borderless).font(.footnote).foregroundColor(.secondary)
-                } else {
-                    Text(account.label).font(.subheadline).fontWeight(isActive ? .semibold : .medium)
-                    Button(action: { editLabel = account.label; isEditingLabel = true }) {
-                        Image(systemName: "pencil").font(.caption)
+                    Button(action: commitRename) {
+                        Text("SAVE")
+                            .font(T.mono(10, weight: .bold))
+                            .foregroundColor(T.primary)
+                            .contentShape(Rectangle())
                     }
-                    .buttonStyle(.borderless).foregroundColor(.secondary)
+                    .buttonStyle(.plain)
+                    Button(action: { isEditingLabel = false }) {
+                        Text("CANCEL")
+                            .font(T.mono(10))
+                            .foregroundColor(T.muted)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    Button(action: { editLabel = account.label; isEditingLabel = true }) {
+                        HStack(spacing: 4) {
+                            Text(account.label.uppercased())
+                                .font(T.mono(11, weight: isActive ? .bold : .medium))
+                                .foregroundColor(T.ink)
+                            Image(systemName: "pencil")
+                                .font(.caption2)
+                                .foregroundColor(T.muted)
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
 
                 Spacer()
 
                 if !isEditingLabel {
                     Toggle(isOn: Binding(get: { account.showInMenuBar }, set: { onToggleMenuBar($0) })) {
-                        Text("Menu bar").font(.caption2)
+                        Text("MENU BAR").font(T.mono(10)).foregroundColor(T.muted)
                     }
-                    .toggleStyle(.checkbox)
-                    .help("Show in menu bar")
-                    Button(action: onRefresh) {
-                        Image(systemName: "arrow.clockwise").font(.footnote)
-                    }.buttonStyle(.borderless).foregroundColor(.secondary)
-                    Button(action: onDelete) {
-                        Image(systemName: "trash").font(.footnote)
-                    }.buttonStyle(.borderless).foregroundColor(.secondary)
+                    .toggleStyle(.switch)
+                    .scaleEffect(0.75)
+                    .frame(height: 20)
+
+                    iconButton("trash") { showDeleteAlert = true }
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 9)
+            .background(T.ink.opacity(0.04))
+
+            Rectangle().fill(T.ink.opacity(0.12)).frame(height: T.border)
+
+            // Body
+            Group {
+                if let error = account.errorMessage {
+                    Text(error)
+                        .font(T.mono(11))
+                        .foregroundColor(T.primary)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                } else if account.hasFetchedData {
+                    usageContent
+                } else {
+                    Text("FETCHING...")
+                        .font(T.mono(11))
+                        .foregroundColor(T.muted)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
         }
+        .overlay(Rectangle().stroke(T.ink.opacity(0.18), lineWidth: T.border))
+        .alert("Delete \"\(account.label)\"?", isPresented: $showDeleteAlert) {
+            Button("Delete", role: .destructive) { onDelete() }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This will remove the account and its data from the app.")
+        }
     }
 
-    // MARK: - Usage rings
+    // MARK: - Usage content
 
-    private var usageRings: some View {
+    private var usageContent: some View {
         HStack(alignment: .center, spacing: 16) {
-            ZStack {
-            Canvas { ctx, size in
-                let center = CGPoint(x: size.width / 2, y: size.height / 2)
-                let outerRadius: CGFloat = 50
-                let innerRadius: CGFloat = 33
-                let lineWidth: CGFloat = 9
-                let trackColor = Color.secondary.opacity(0.15)
-                let start = Angle.degrees(-90)
-
-                let sessionPct = min(max(account.sessionPercentage, 0), 1)
-                let weeklyPct  = min(max(account.weeklyPercentage,  0), 1)
-
-                // Outer track
-                ctx.stroke(
-                    Path { p in p.addArc(center: center, radius: outerRadius,
-                                         startAngle: start, endAngle: start + .degrees(360), clockwise: false) },
-                    with: .color(trackColor),
-                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
-                )
-                // Outer fill — weekly (green)
-                if weeklyPct > 0 {
-                    ctx.stroke(
-                        Path { p in p.addArc(center: center, radius: outerRadius,
-                                             startAngle: start, endAngle: start + .degrees(360 * weeklyPct), clockwise: false) },
-                        with: .color(Color(nsColor: .systemBlue)),
-                        style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
-                    )
-                }
-                // Inner track
-                ctx.stroke(
-                    Path { p in p.addArc(center: center, radius: innerRadius,
-                                         startAngle: start, endAngle: start + .degrees(360), clockwise: false) },
-                    with: .color(trackColor),
-                    style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
-                )
-                // Inner fill — session (orange)
-                if sessionPct > 0 {
-                    ctx.stroke(
-                        Path { p in p.addArc(center: center, radius: innerRadius,
-                                             startAngle: start, endAngle: start + .degrees(360 * sessionPct), clockwise: false) },
-                        with: .color(Color(red: 1.0, green: 0.48, blue: 0.0)),
-                        style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
-                    )
-                }
-            }
-            .frame(width: 118, height: 118)
-            if let label = timeToRest(account.sessionResetsAt) {
-                Text(label)
-                    .font(.system(size: 11, weight: .semibold, design: .rounded))
-                    .foregroundColor(Color(red: 0xea/255.0, green: 0x60/255.0, blue: 0x49/255.0))
-                    .monospacedDigit()
-            }
-            } // ZStack
+            UsageRings(
+                sessionPct: account.sessionPercentage,
+                weeklyPct: account.weeklyPercentage,
+                resetLabel: timeToReset(account.sessionResetsAt)
+            )
 
             VStack(alignment: .leading, spacing: 2) {
-                // Session
-                Text("Current session")
-                    .font(.caption).foregroundColor(.secondary)
+                statBlock(
+                    label: "SESSION",
+                    pct: account.sessionPercentage,
+                    color: T.ink,
+                    subtitle: account.sessionResetsAt.map { formatRelative($0) }
+                )
 
-                HStack(alignment: .firstTextBaseline, spacing: 3) {
-                    Text("\(Int(min(account.sessionPercentage, 1.0) * 100))")
-                        .font(.system(size: 30, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(red: 1.0, green: 0.48, blue: 0.0))
-                        .monospacedDigit()
-                    if let date = account.sessionResetsAt {
-                        Text("% used (\(formatRelative(date)))")
-                            .font(.footnote).foregroundColor(.secondary)
-                    } else {
-                        Text("% used")
-                            .font(.footnote).foregroundColor(.secondary)
-                    }
-                }
+                Rectangle().fill(T.ink.opacity(0.12)).frame(height: T.border).padding(.vertical, 8)
 
-                Rectangle()
-                    .fill(Color.secondary.opacity(0.25))
-                    .frame(height: 0.5)
-                    .padding(.vertical, 6)
-
-                // Weekly
-                Text("Weekly limits")
-                    .font(.caption).foregroundColor(.secondary)
-
-                HStack(alignment: .firstTextBaseline, spacing: 3) {
-                    Text("\(Int(min(account.weeklyPercentage, 1.0) * 100))")
-                        .font(.system(size: 30, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(nsColor: .systemBlue))
-                        .monospacedDigit()
-                    if let date = account.weeklyResetsAt {
-                        Text("% used (\(formatAbsolute(date)))")
-                            .font(.footnote).foregroundColor(.secondary)
-                    } else {
-                        Text("% used")
-                            .font(.footnote).foregroundColor(.secondary)
-                    }
-                }
+                statBlock(
+                    label: "WEEKLY",
+                    pct: account.weeklyPercentage,
+                    color: T.primary,
+                    subtitle: account.weeklyResetsAt.map { formatAbsolute($0) }
+                )
             }
 
             Spacer(minLength: 0)
         }
+        .padding(12)
+    }
+
+    private func statBlock(label: String, pct: Double, color: Color, subtitle: String?) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(label)
+                .font(T.mono(9))
+                .foregroundColor(T.muted)
+                .tracking(1.5)
+
+            HStack(alignment: .firstTextBaseline, spacing: 3) {
+                Text("\(Int(min(pct, 1.0) * 100))")
+                    .font(T.mono(30, weight: .bold))
+                    .foregroundColor(color)
+                Text("%")
+                    .font(T.mono(12))
+                    .foregroundColor(T.muted)
+                if let sub = subtitle {
+                    Text(sub)
+                        .font(T.mono(10))
+                        .foregroundColor(T.muted)
+                        .lineLimit(1)
+                }
+            }
+        }
     }
 
     // MARK: - Helpers
+
+    private func iconButton(_ systemName: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: systemName).font(.footnote)
+        }
+        .buttonStyle(.plain)
+        .foregroundColor(T.muted)
+    }
 
     private func commitRename() {
         let trimmed = editLabel.trimmingCharacters(in: .whitespaces)
@@ -187,11 +177,7 @@ struct AccountCard: View {
         isEditingLabel = false
     }
 
-    private func formatTime(_ date: Date) -> String {
-        let f = DateFormatter(); f.timeStyle = .short; return f.string(from: date)
-    }
-
-    private func timeToRest(_ date: Date?) -> String? {
+    private func timeToReset(_ date: Date?) -> String? {
         guard let date else { return nil }
         let secs = date.timeIntervalSince(Date())
         guard secs > 0 else { return nil }
@@ -202,15 +188,17 @@ struct AccountCard: View {
 
     private func formatRelative(_ date: Date) -> String {
         let secs = date.timeIntervalSince(Date())
-        guard secs > 0 else { return "Resetting soon" }
+        guard secs > 0 else { return "· Resetting soon" }
         let h = Int(secs) / 3600
         let m = (Int(secs) % 3600) / 60
-        return h > 0 ? "Resets in \(h) hr \(m) min" : "Resets in \(m) min"
+        let f = DateFormatter(); f.dateFormat = "h:mm a"
+        let at = f.string(from: date)
+        return h > 0 ? "· Resets in \(h)h \(m)m (\(at))" : "· Resets in \(m)m (\(at))"
     }
 
     private func formatAbsolute(_ date: Date) -> String {
         let f = DateFormatter()
         f.dateFormat = "EEE h:mm a"
-        return "Resets \(f.string(from: date))"
+        return "· Resets \(f.string(from: date))"
     }
 }

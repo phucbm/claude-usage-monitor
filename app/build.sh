@@ -29,6 +29,12 @@ if [ -f "icon.png" ]; then
     cp icon.png "$APP_PATH/Contents/Resources/"
 fi
 
+# Copy bundled fonts
+if [ -d "Fonts" ]; then
+    mkdir -p "$APP_PATH/Contents/Resources/Fonts"
+    cp Fonts/*.ttf "$APP_PATH/Contents/Resources/Fonts/"
+fi
+
 # Collect all Swift source files
 SOURCES=$(find Sources -name "*.swift" | sort | tr '\n' ' ')
 
