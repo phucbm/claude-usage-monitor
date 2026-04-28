@@ -37,7 +37,7 @@ struct UsageView: View {
                 .foregroundColor(.secondary)
                 .padding(.vertical, 7)
         }
-        .background(Color.white)
+        .background(Color(nsColor: .windowBackgroundColor))
         .frame(width: 420)
         .onAppear { accountsManager.updatePercentagesForAll() }
     }
