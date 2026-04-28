@@ -172,8 +172,14 @@ class AccountsManager: ObservableObject {
                 guard let idx = self.accounts.firstIndex(where: { $0.id == accountId }) else { return }
                 if error != nil { self.accounts[idx].errorMessage = "Network error"; self.delegate?.refreshMenuBar(); return }
                 guard let http = response as? HTTPURLResponse else { self.accounts[idx].errorMessage = "Invalid response"; return }
-                if http.statusCode == 200, let data { self.parseUsageData(data, accountIndex: idx) }
-                else { self.accounts[idx].errorMessage = "HTTP \(http.statusCode)" }
+                if http.statusCode == 200, let data {
+                    self.accounts[idx].billingStatus = .ok
+                    self.parseUsageData(data, accountIndex: idx)
+                } else {
+                    self.accounts[idx].billingStatus = Self.billingStatus(for: http.statusCode)
+                    self.accounts[idx].errorMessage = self.accounts[idx].billingStatus == .ok
+                        ? "HTTP \(http.statusCode)" : nil
+                }
                 self.delegate?.refreshMenuBar()
             }
         }.resume()
@@ -211,6 +217,16 @@ class AccountsManager: ObservableObject {
 
     func updatePercentagesForAll() {
         for i in accounts.indices { accounts[i].updatePercentages() }
+    }
+
+    private static func billingStatus(for statusCode: Int) -> BillingStatus {
+        switch statusCode {
+        case 401: return .sessionExpired
+        case 402: return .paymentRequired
+        case 403: return .forbidden
+        case 429: return .rateLimited
+        default:  return .ok
+        }
     }
 
 }

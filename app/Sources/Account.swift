@@ -1,5 +1,33 @@
 import Foundation
 
+enum BillingStatus: Equatable {
+    case ok
+    case paymentRequired
+    case sessionExpired
+    case forbidden
+    case rateLimited
+
+    var message: String {
+        switch self {
+        case .ok:              return ""
+        case .paymentRequired: return "Payment required — update billing at claude.ai"
+        case .sessionExpired:  return "Session expired — please refresh your cookie"
+        case .forbidden:       return "Access denied — cookie may be invalid or account suspended"
+        case .rateLimited:     return "Rate limited — too many requests, try again later"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .ok:              return ""
+        case .paymentRequired: return "creditcard.trianglebadge.exclamationmark"
+        case .sessionExpired:  return "key.slash"
+        case .forbidden:       return "lock.slash"
+        case .rateLimited:     return "clock.badge.exclamationmark"
+        }
+    }
+}
+
 struct Account: Codable, Identifiable {
     var id: String
     var label: String
@@ -21,6 +49,7 @@ struct Account: Codable, Identifiable {
     var weeklySonnetResetsAt: Date?
     var hasWeeklySonnet: Bool = false
     var errorMessage: String?
+    var billingStatus: BillingStatus = .ok
     var hasFetchedData: Bool = false
     var lastUpdated: Date?
 
