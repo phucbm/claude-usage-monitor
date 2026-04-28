@@ -55,54 +55,54 @@ export default function Hero() {
           </div>
 
           {/* Mockup panel */}
-          <div className="justify-self-stretch md:justify-self-end shrink-0">
+          <div className="mockup-panel justify-self-stretch md:justify-self-end shrink-0">
             <div className="border-2 border-ink bg-white w-full max-w-[340px]">
 
               {/* Header */}
               <div className="border-b-2 border-ink py-[9px] px-4 flex justify-between items-center">
                 <span className="font-mono text-[10px] font-bold tracking-[0.08em] uppercase">Claude Usage Monitor</span>
-                <span className="font-mono text-[10px] text-green-500 font-bold">{t.hero.mockup.live}</span>
+                <span className="font-mono text-[10px] text-green-500 font-bold">+ Add account</span>
               </div>
 
               {/* Account 1 */}
               <div className="border-b border-ink/12 py-2 px-4 flex justify-between items-center">
-                <span className="font-mono text-[11px] font-bold">{t.hero.mockup.personal}</span>
+                <span className="font-mono text-[11px] font-bold">Personal</span>
                 <span className="w-2 h-2 bg-green-500 border border-ink/30 inline-block" />
               </div>
               <div className="p-5 px-4 flex gap-4 items-center">
                 <RingsMockup sessionPct={s} weeklyPct={w} resetTime={r1} />
                 <div className="flex-1 min-w-0">
-                  <p className="font-mono text-[9px] text-muted tracking-[0.08em] uppercase mb-[3px]">{t.hero.mockup.session}</p>
+                  <p className="font-mono text-[9px] text-muted tracking-[0.08em] uppercase mb-[3px]">Session</p>
                   <p className="font-display text-[30px] text-ink leading-none mb-[3px]">{Math.round(s * 100)}%</p>
-                  <p className="font-mono text-[9px] text-muted mb-[14px]">{t.hero.mockup.resetsIn} {r1}</p>
-                  <p className="font-mono text-[9px] text-muted tracking-[0.08em] uppercase mb-[3px]">{t.hero.mockup.weekly}</p>
+                  <p className="font-mono text-[9px] text-muted mb-[14px]">Resets in {r1}</p>
+                  <p className="font-mono text-[9px] text-muted tracking-[0.08em] uppercase mb-[3px]">Weekly</p>
                   <p className="font-display text-[30px] text-primary leading-none mb-[3px]">{Math.round(w * 100)}%</p>
-                  <p className="font-mono text-[9px] text-muted">{t.hero.mockup.resetsMon}</p>
+                  <p className="font-mono text-[9px] text-muted">Resets Mon 9:00 AM</p>
                 </div>
               </div>
 
               {/* Account 2 */}
               <div className="border-t border-b border-ink/12 py-2 px-4 flex justify-between items-center">
-                <span className="font-mono text-[11px] font-bold">{t.hero.mockup.work}</span>
+                <span className="font-mono text-[11px] font-bold">Work</span>
                 <span className="w-2 h-2 bg-green-500 border border-ink/30 inline-block" />
               </div>
               <div className="p-5 px-4 flex gap-4 items-center">
                 <RingsMockup sessionPct={s2} weeklyPct={w2} resetTime={r2} />
                 <div className="flex-1 min-w-0">
-                  <p className="font-mono text-[9px] text-muted tracking-[0.08em] uppercase mb-[3px]">{t.hero.mockup.session}</p>
+                  <p className="font-mono text-[9px] text-muted tracking-[0.08em] uppercase mb-[3px]">Session</p>
                   <p className="font-display text-[30px] text-ink leading-none mb-[3px]">{Math.round(s2 * 100)}%</p>
-                  <p className="font-mono text-[9px] text-muted mb-[14px]">{t.hero.mockup.resetsIn} {r2}</p>
-                  <p className="font-mono text-[9px] text-muted tracking-[0.08em] uppercase mb-[3px]">{t.hero.mockup.weekly}</p>
+                  <p className="font-mono text-[9px] text-muted mb-[14px]">Resets in {r2}</p>
+                  <p className="font-mono text-[9px] text-muted tracking-[0.08em] uppercase mb-[3px]">Weekly</p>
                   <p className="font-display text-[30px] text-primary leading-none mb-[3px]">{Math.round(w2 * 100)}%</p>
-                  <p className="font-mono text-[9px] text-muted">{t.hero.mockup.resetsMon}</p>
+                  <p className="font-mono text-[9px] text-muted">Resets Mon 9:00 AM</p>
                 </div>
               </div>
 
               {/* Footer */}
               <div className="border-t border-ink/12 py-2 px-4 flex justify-between">
-                <span className="font-mono text-[9px] text-muted">{t.hero.mockup.updated}</span>
+                <span className="font-mono text-[9px] text-muted">Updated just now</span>
                 <button onClick={randomize} className="font-mono text-[9px] text-primary bg-transparent border-0 cursor-pointer p-0 tracking-[0.06em]">
-                  {t.hero.mockup.randomize}
+                  Randomize →
                 </button>
               </div>
             </div>

@@ -30,14 +30,12 @@ export const en = {
   ],
   features: {
     heading: 'WHAT IT DOES',
-    count: '06 MODULES',
+    count: '04 MODULES',
     items: [
-      { id: '01', label: 'MULTI-ACCOUNT',    body: 'Track as many Claude accounts as you need — work, personal, team — each with its own ring display and menu bar badge.' },
-      { id: '02', label: 'CONCENTRIC RINGS', body: 'Two rings. Outer = weekly limit. Inner = current session. Read both at a glance without opening anything else.' },
-      { id: '03', label: 'MENU BAR NATIVE',  body: 'Sits in your macOS menu bar. One click for the full panel. No dock icon, no windows, no friction.' },
-      { id: '04', label: 'RESET COUNTDOWN',  body: 'Each account shows exactly when session and weekly limits reset. Plan your work, not your surprises.' },
-      { id: '05', label: 'ZERO TELEMETRY',   body: 'Your session cookie and usage data never leave your machine. No analytics, no cloud sync, ever.' },
-      { id: '06', label: 'OPEN SOURCE',      body: "Every line of code is on GitHub. MIT licensed. Fork it, audit it, improve it — it's yours." },
+      { id: '01', label: 'MULTI-ACCOUNT',   body: 'Track as many Claude accounts as you need — work, personal, team — each with its own ring display and menu bar badge.' },
+      { id: '02', label: 'MACBOOK MENUBAR', body: 'Sits in your macOS menu bar. One click for the full panel. No dock icon, no windows, no friction.' },
+      { id: '03', label: 'ZERO TELEMETRY',  body: 'Your session cookie and usage data never leave your machine. No analytics, no cloud sync, ever.' },
+      { id: '04', label: 'OPEN SOURCE',     body: "Every line of code is on GitHub. MIT licensed. Fork it, audit it, improve it — it's yours." },
     ],
   },
   howItWorks: {

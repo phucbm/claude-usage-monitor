@@ -9,14 +9,14 @@ export default function Features() {
           <h2 className="font-display text-[clamp(26px,4vw,44px)] uppercase text-ink">{t.features.heading}</h2>
           <span className="font-mono text-[11px] text-muted tracking-[0.1em] uppercase">{t.features.count}</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 border-2 border-ink">
+        <div className="grid grid-cols-1 md:grid-cols-2 border-2 border-ink">
           {t.features.items.map((f, i) => (
             <div key={f.id}
               className={[
                 'group p-8 transition-colors duration-[120ms] cursor-default hover:bg-ink',
-                i % 3 !== 2 ? 'md:border-r border-ink' : '',
+                i % 2 !== 1 ? 'md:border-r border-ink' : '',
                 i < t.features.items.length - 1 ? 'border-b border-ink' : '',
-                i >= 3 ? 'md:border-b-0' : '',
+                i >= 2 ? 'md:border-b-0' : '',
               ].join(' ')}
             >
               <p className="font-mono text-[11px] font-bold text-primary tracking-[0.1em] mb-3">[{f.id}]</p>
