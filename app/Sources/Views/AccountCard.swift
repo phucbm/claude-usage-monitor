@@ -61,7 +61,7 @@ struct AccountCard: View {
 
                 if !isEditingLabel {
                     Toggle(isOn: Binding(get: { account.showInMenuBar }, set: { onToggleMenuBar($0) })) {
-                        Text("MENU BAR").font(T.mono(10)).foregroundColor(T.muted)
+                        Text("MENU BAR").font(T.mono(14)).foregroundColor(T.muted)
                     }
                     .toggleStyle(.switch)
                     .scaleEffect(0.75)
@@ -93,6 +93,25 @@ struct AccountCard: View {
                         .padding(12)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
+            }
+
+            // Billing warning
+            if account.billingStatus != .ok {
+                Rectangle().fill(T.ink.opacity(0.12)).frame(height: T.border)
+                HStack(spacing: 8) {
+                    Image(systemName: account.billingStatus.icon)
+                        .font(.caption)
+                        .foregroundColor(billingColor)
+                    Text(account.billingStatus.message.uppercased())
+                        .font(T.mono(9, weight: .bold))
+                        .foregroundColor(billingColor)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(billingColor.opacity(0.07))
             }
         }
         .overlay(Rectangle().stroke(T.ink.opacity(0.18), lineWidth: T.border))
@@ -162,6 +181,15 @@ struct AccountCard: View {
     }
 
     // MARK: - Helpers
+
+    private var billingColor: Color {
+        switch account.billingStatus {
+        case .paymentRequired: return Color(red: 0xF5/255, green: 0x9E/255, blue: 0x0B/255)
+        case .sessionExpired, .forbidden: return T.primary
+        case .rateLimited: return Color(red: 0xF5/255, green: 0x9E/255, blue: 0x0B/255)
+        case .ok: return .clear
+        }
+    }
 
     private func iconButton(_ systemName: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {

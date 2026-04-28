@@ -3,7 +3,7 @@ import AppKit
 import Carbon
 
 private let kPanelOriginKey = "FloatingPanelOrigin"
-private let kPanelWidth: CGFloat = 420
+private let kPanelWidth: CGFloat = 440
 private let kPanelHeight: CGFloat = 520
 private let kPanelMargin: CGFloat = 20
 private let kCornerRadius: CGFloat = 0

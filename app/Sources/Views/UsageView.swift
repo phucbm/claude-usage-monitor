@@ -21,7 +21,7 @@ struct UsageView: View {
                         .padding(16)
                 }
             }
-            .frame(width: 420)
+            .frame(width: 440)
 
             Rectangle().fill(T.ink.opacity(0.18)).frame(height: T.border)
 
@@ -32,7 +32,7 @@ struct UsageView: View {
                 .padding(.vertical, 8)
         }
         .background(T.paper)
-        .frame(width: 420)
+        .frame(width: 440)
         .onAppear { accountsManager.updatePercentagesForAll() }
     }
 
