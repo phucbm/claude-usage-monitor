@@ -10,9 +10,6 @@
 ## Features
 
 - **Multi-account support** — Add multiple Claude accounts (Work, Personal, etc.), each with its own session and weekly usage bars
-- **Active account indicator** — The menu bar icon shows the session usage of the currently active account
-- **Color-coded icon** — Spark icon changes color: green (<70%), yellow (<90%), red (≥90%)
-- **Smart notifications** — Alerts at 25%, 50%, 75%, 90% session usage for the active account
 - **Keyboard shortcut** — Toggle popup with Cmd+U from anywhere
 - **Auto-refresh** — Updates every 5 minutes automatically
 - **Privacy-first** — All data (cookies, settings) stored locally in UserDefaults
@@ -21,7 +18,7 @@
 
 ## Installation
 
-1. Download `ClaudeUsageMonitor-1.0.0.dmg` from the [latest release](../../releases/latest)
+1. Download `ClaudeUsageMonitor-1.x.x.dmg` from the [latest release](../../releases/latest)
 2. Double-click to mount
 3. Drag `ClaudeUsageMonitor.app` to the Applications folder
 4. Eject the DMG
