@@ -9,7 +9,6 @@ struct UsageView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Tab bar
             Picker("", selection: $selectedTab) {
                 Text("Accounts").tag(0)
                 Text("Settings").tag(1)
@@ -42,7 +41,6 @@ struct UsageView: View {
             if accountsManager.accounts.isEmpty {
                 OnboardingView(accountsManager: accountsManager)
             } else {
-                // Header row
                 HStack {
                     Text("Accounts")
                         .font(.headline)
@@ -55,6 +53,21 @@ struct UsageView: View {
                         }
                         .buttonStyle(.borderless)
                         .help("Refresh all")
+                        Button(action: { showingAddAccount = true }) {
+                            Image(systemName: "plus")
+                        }
+                        .buttonStyle(.borderless)
+                        .help("Add account")
+                    }
+                }
+
+                if showingAddAccount {
+                    AddAccountForm(label: $newLabel, cookie: $newCookie) {
+                        guard !newCookie.isEmpty else { return }
+                        accountsManager.addAccount(label: newLabel, cookie: newCookie)
+                        newLabel = ""; newCookie = ""; showingAddAccount = false
+                    } onCancel: {
+                        newLabel = ""; newCookie = ""; showingAddAccount = false
                     }
                 }
 
@@ -68,19 +81,6 @@ struct UsageView: View {
                         onRename: { accountsManager.renameAccount(id: account.id, label: $0) },
                         onToggleMenuBar: { accountsManager.toggleMenuBar(id: account.id, show: $0) }
                     )
-                }
-
-                if showingAddAccount {
-                    AddAccountForm(label: $newLabel, cookie: $newCookie) {
-                        guard !newCookie.isEmpty else { return }
-                        accountsManager.addAccount(label: newLabel, cookie: newCookie)
-                        newLabel = ""; newCookie = ""; showingAddAccount = false
-                    } onCancel: {
-                        newLabel = ""; newCookie = ""; showingAddAccount = false
-                    }
-                } else {
-                    Button("+ Add Account") { showingAddAccount = true }
-                        .buttonStyle(.borderless).font(.footnote)
                 }
             }
         }

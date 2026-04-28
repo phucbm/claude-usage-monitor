@@ -1,11 +1,34 @@
 import SwiftUI
 import AppKit
 import Carbon
-import UserNotifications
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+private let kPanelOriginKey = "FloatingPanelOrigin"
+private let kPanelWidth: CGFloat = 420
+private let kPanelHeight: CGFloat = 520
+private let kPanelMargin: CGFloat = 20
+private let kCornerRadius: CGFloat = 12
+
+// MARK: - FloatingPanel
+
+class FloatingPanel: NSPanel {
+    weak var appDelegate: AppDelegate?
+
+    override var canBecomeKey: Bool { true }
+
+    override func keyDown(with event: NSEvent) {
+        if event.keyCode == 53 { // Escape
+            appDelegate?.closePanel()
+            return
+        }
+        super.keyDown(with: event)
+    }
+}
+
+// MARK: - AppDelegate
+
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     var statusItem: NSStatusItem!
-    var popover: NSPopover!
+    var panel: FloatingPanel!
     var accountsManager: AccountsManager!
     var eventMonitor: Any?
     var hotKeyRef: EventHotKeyRef?
@@ -22,15 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         accountsManager = AccountsManager(delegate: self)
-
-        popover = NSPopover()
-        popover.contentSize = NSSize(width: 420, height: 520)
-        popover.behavior = .transient
-        popover.contentViewController = NSHostingController(
-            rootView: UsageView(accountsManager: accountsManager)
-        )
-
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+        setupPanel()
 
         refreshMenuBar()
         accountsManager.fetchAllAccounts()
@@ -73,7 +88,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let attrs: [NSAttributedString.Key: Any] = [.font: font]
 
-        // Measure each badge
         let texts: [String] = accounts.map { account in
             let letter = String(account.label.prefix(1)).uppercased()
             let pct = account.hasFetchedData ? "\(Int(account.sessionPercentage * 100))%" : "--"
@@ -88,12 +102,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 let w = widths[i]
                 let badgeRect = NSRect(x: x, y: 0, width: w, height: height)
 
-                // Background
                 let path = NSBezierPath(roundedRect: badgeRect, xRadius: radius, yRadius: radius)
                 bg.setFill()
                 path.fill()
 
-                // Text
                 let textAttrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: orange]
                 let textSize = (text as NSString).size(withAttributes: textAttrs)
                 let tx = x + (w - textSize.width) / 2
@@ -106,6 +118,75 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         image.isTemplate = false
         return image
+    }
+
+    // MARK: - Panel Setup
+
+    private func defaultPanelFrame() -> NSRect {
+        guard let screen = NSScreen.main else {
+            return NSRect(x: 100, y: 100, width: kPanelWidth, height: kPanelHeight)
+        }
+        let vis = screen.visibleFrame
+        let x = vis.maxX - kPanelWidth - kPanelMargin
+        let y = vis.maxY - kPanelHeight - kPanelMargin
+        return NSRect(x: x, y: y, width: kPanelWidth, height: kPanelHeight)
+    }
+
+    private func restoredPanelFrame() -> NSRect {
+        if let data = UserDefaults.standard.data(forKey: kPanelOriginKey),
+           let point = try? JSONDecoder().decode(CGPoint.self, from: data) {
+            return NSRect(origin: point, size: NSSize(width: kPanelWidth, height: kPanelHeight))
+        }
+        return defaultPanelFrame()
+    }
+
+    private func savePanelPosition() {
+        if let data = try? JSONEncoder().encode(panel.frame.origin) {
+            UserDefaults.standard.set(data, forKey: kPanelOriginKey)
+        }
+    }
+
+    private func setupPanel() {
+        let frame = restoredPanelFrame()
+
+        panel = FloatingPanel(
+            contentRect: frame,
+            styleMask: [.nonactivatingPanel, .borderless],
+            backing: .buffered,
+            defer: false
+        )
+        panel.appDelegate = self
+        panel.delegate = self
+        panel.level = .floating
+        panel.isOpaque = false
+        panel.backgroundColor = .clear
+        panel.hasShadow = true
+        panel.isMovableByWindowBackground = true
+        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+
+        // NSVisualEffectView provides the blur context and clips corners
+        let effectView = NSVisualEffectView(frame: NSRect(origin: .zero, size: frame.size))
+        effectView.material = .popover
+        effectView.blendingMode = .behindWindow
+        effectView.state = .active
+        effectView.wantsLayer = true
+        effectView.layer?.cornerRadius = kCornerRadius
+        effectView.layer?.masksToBounds = true
+
+        let hostingView = NSHostingController(
+            rootView: UsageView(accountsManager: accountsManager)
+        ).view
+        hostingView.frame = effectView.bounds
+        hostingView.autoresizingMask = [.width, .height]
+        effectView.addSubview(hostingView)
+
+        panel.contentView = effectView
+    }
+
+    // MARK: - NSWindowDelegate
+
+    func windowDidMove(_ notification: Notification) {
+        savePanelPosition()
     }
 
     // MARK: - Keyboard Shortcut
@@ -145,7 +226,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         var handler: EventHandlerRef?
         let callback: EventHandlerUPP = { (_, _, userData) -> OSStatus in
             let d = Unmanaged<AppDelegate>.fromOpaque(userData!).takeUnretainedValue()
-            DispatchQueue.main.async { d.togglePopover() }
+            DispatchQueue.main.async { d.togglePanel() }
             return noErr
         }
         let ptr = Unmanaged.passUnretained(self).toOpaque()
@@ -159,17 +240,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ notification: Notification) { unregisterGlobalHotKey() }
 
-    // MARK: - Popover
+    // MARK: - Panel
 
     @objc func quitApp() { NSApplication.shared.terminate(nil) }
 
-    @objc func togglePopover() { popover.isShown ? closePopover() : openPopover() }
+    @objc func togglePanel() { panel.isVisible ? closePanel() : openPanel() }
 
     @objc func handleClick() {
         guard let event = NSApp.currentEvent else { return }
         if event.type == .rightMouseUp {
             let menu = NSMenu()
-            let item = NSMenuItem(title: "Toggle Usage (⌘U)", action: #selector(togglePopover), keyEquivalent: "u")
+            let item = NSMenuItem(title: "Toggle Usage (⌘U)", action: #selector(togglePanel), keyEquivalent: "u")
             item.keyEquivalentModifierMask = .command
             menu.addItem(item)
             menu.addItem(.separator())
@@ -178,22 +259,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             statusItem.button?.performClick(nil)
             statusItem.menu = nil
         } else {
-            togglePopover()
+            togglePanel()
         }
     }
 
-    func openPopover() {
-        guard let button = statusItem.button else { return }
+    func openPanel() {
         DispatchQueue.main.async { self.accountsManager.updatePercentagesForAll() }
         NSApp.activate(ignoringOtherApps: true)
-        popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        panel.makeKeyAndOrderFront(nil)
         eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
-            if self?.popover.isShown == true { self?.closePopover() }
+            guard let self = self, self.panel.isVisible else { return }
+            self.closePanel()
         }
     }
 
-    func closePopover() {
-        popover.performClose(nil)
+    func closePanel() {
+        panel.orderOut(nil)
         if let m = eventMonitor { NSEvent.removeMonitor(m); eventMonitor = nil }
     }
 }

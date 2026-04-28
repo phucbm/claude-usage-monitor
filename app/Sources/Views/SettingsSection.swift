@@ -17,23 +17,6 @@ struct SettingsSection: View {
                     }
                 }.toggleStyle(.checkbox)
 
-                Divider()
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Toggle(isOn: Binding(
-                        get: { accountsManager.notificationsEnabled },
-                        set: { v in accountsManager.notificationsEnabled = v; accountsManager.saveSettings() }
-                    )) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Enable Notifications").font(.footnote)
-                            Text("Alerts at 25%, 50%, 75%, and 90% session usage")
-                                .font(.caption2).foregroundColor(.secondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                    }.toggleStyle(.checkbox)
-                    Button("Test Notification") { accountsManager.sendTestNotification() }
-                        .buttonStyle(.bordered).controlSize(.small)
-                }
 
                 Divider()
 

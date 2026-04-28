@@ -41,17 +41,21 @@ On first launch, you'll see the onboarding screen. Paste your cookie and give th
 **Requirements:** macOS 12.0+, Xcode Command Line Tools
 
 ```bash
-cd /path/to/claude-usage-monitor
-chmod +x build.sh
-./build.sh
+cd app && ./build.sh
 ```
 
-The app bundle is created at `build/ClaudeUsageMonitor.app`.
+The app bundle is created at `app/build/ClaudeUsageMonitor.app`. The script compiles a universal binary (arm64 + x86_64), signs it, and opens the app automatically.
+
+**Hot-reload during development** — kill the running instance, rebuild, and relaunch in one line:
+
+```bash
+pkill -x ClaudeUsageMonitor; cd app && ./build.sh
+```
 
 **Create a DMG installer:**
 
 ```bash
-./create_dmg.sh
+cd app && ./create_dmg.sh
 ```
 
 ## Project Structure

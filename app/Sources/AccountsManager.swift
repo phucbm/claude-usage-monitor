@@ -6,13 +6,11 @@ class AccountsManager: ObservableObject {
     @Published var accounts: [Account] = []
     @Published var activeAccountId: String?
     @Published var isLoading: Bool = false
-    @Published var notificationsEnabled: Bool = true
     @Published var openAtLogin: Bool = false
     @Published var shortcutEnabled: Bool = true
     @Published var isAccessibilityEnabled: Bool = false
 
     private weak var delegate: AppDelegate?
-    private var lastNotifiedThresholds: [String: Int] = [:]
 
     var activeAccount: Account? {
         if let id = activeAccountId, let found = accounts.first(where: { $0.id == id }) { return found }
@@ -50,12 +48,6 @@ class AccountsManager: ObservableObject {
     }
 
     func loadSettings() {
-        if !UserDefaults.standard.bool(forKey: "has_set_notifications") {
-            notificationsEnabled = true
-            UserDefaults.standard.set(true, forKey: "has_set_notifications")
-        } else {
-            notificationsEnabled = UserDefaults.standard.bool(forKey: "notifications_enabled")
-        }
         openAtLogin = UserDefaults.standard.bool(forKey: "open_at_login")
         shortcutEnabled = UserDefaults.standard.object(forKey: "shortcut_enabled") == nil
             ? true
@@ -63,7 +55,6 @@ class AccountsManager: ObservableObject {
     }
 
     func saveSettings() {
-        UserDefaults.standard.set(notificationsEnabled, forKey: "notifications_enabled")
         UserDefaults.standard.set(openAtLogin, forKey: "open_at_login")
         UserDefaults.standard.set(shortcutEnabled, forKey: "shortcut_enabled")
         UserDefaults.standard.synchronize()
@@ -216,43 +207,10 @@ class AccountsManager: ObservableObject {
         accounts[accountIndex].hasFetchedData = true
         accounts[accountIndex].updatePercentages()
 
-        if accounts[accountIndex].id == activeAccountId {
-            checkNotificationThresholds(percentage: accounts[accountIndex].sessionUsage, accountId: accounts[accountIndex].id)
-        }
     }
 
     func updatePercentagesForAll() {
         for i in accounts.indices { accounts[i].updatePercentages() }
     }
 
-    // MARK: - Notifications
-
-    private func checkNotificationThresholds(percentage: Int, accountId: String) {
-        guard notificationsEnabled else { return }
-        let last = lastNotifiedThresholds[accountId] ?? 0
-        let thresholds = [25, 50, 75, 90]
-        for t in thresholds where percentage >= t && last < t {
-            sendNotification(percentage: percentage, threshold: t)
-            lastNotifiedThresholds[accountId] = t
-        }
-        if percentage < last {
-            lastNotifiedThresholds[accountId] = thresholds.filter { $0 <= percentage }.last ?? 0
-        }
-    }
-
-    func sendNotification(percentage: Int, threshold: Int) {
-        let c = UNMutableNotificationContent()
-        c.title = "Claude Usage Alert"
-        c.body = "You've reached \(percentage)% of your 5-hour session limit"
-        c.sound = .default
-        UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: "usage-\(threshold)", content: c, trigger: nil))
-    }
-
-    func sendTestNotification() {
-        let c = UNMutableNotificationContent()
-        c.title = "Claude Usage Alert"
-        c.body = "Test — You've reached 75% of your 5-hour session limit"
-        c.sound = .default
-        UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: "usage-test-\(Date().timeIntervalSince1970)", content: c, trigger: nil))
-    }
 }
