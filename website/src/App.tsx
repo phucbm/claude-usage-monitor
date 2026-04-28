@@ -55,7 +55,7 @@ const TICKER_ITEMS = [
 function Ticker() {
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS]
   return (
-    <div style={{ borderTop: `2px solid ${INK}`, borderBottom: `2px solid ${INK}`, background: INK, overflow: 'hidden', padding: '10px 0' }}>
+    <div id="ticker" style={{ borderTop: `2px solid ${INK}`, borderBottom: `2px solid ${INK}`, background: INK, overflow: 'hidden', padding: '10px 0' }}>
       <div className="ticker-track">
         {items.map((item, i) => (
           <span key={i} style={{ color: PAPER, fontFamily: MONO, fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '0 28px' }}>
@@ -100,7 +100,7 @@ function Nav() {
 
   return (
     <>
-      <nav style={{ borderBottom: `2px solid ${INK}`, position: 'sticky', top: 0, background: PAPER, zIndex: 100 }}>
+      <nav id="nav" style={{ borderBottom: `2px solid ${INK}`, position: 'sticky', top: 0, background: PAPER, zIndex: 100 }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 }}>
           <a href="#" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: INK }}>
             <Logo size={26} />
@@ -146,7 +146,7 @@ function Nav() {
 // ─── Hero ────────────────────────────────────────────────────────────────────
 function Hero() {
   return (
-    <section style={{ borderBottom: `2px solid ${INK}` }}>
+    <section id="hero" style={{ borderBottom: `2px solid ${INK}` }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: `1px solid rgba(10,10,10,0.18)`, fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED }}>
           <span>[ REV 1.0 ]</span>
@@ -193,7 +193,7 @@ function AppMockup() {
   const randomize = () => { setS(+(Math.random() * 0.88 + 0.06).toFixed(2)); setW(+(Math.random() * 0.88 + 0.06).toFixed(2)) }
 
   return (
-    <section style={{ borderBottom: `2px solid ${INK}`, padding: '72px 24px' }}>
+    <section id="mockup" style={{ borderBottom: `2px solid ${INK}`, padding: '72px 24px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div className="grid-2col" style={{ border: `2px solid ${INK}` }}>
           <div className="mockup-left" style={{ borderRight: `2px solid ${INK}`, padding: '48px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -284,7 +284,7 @@ function HowItWorks() {
     { n: '03', title: 'WATCH THE RINGS', body: 'Rings update automatically. Outer fills with weekly usage, inner fills with session. Reset countdowns shown below each account.' },
   ]
   return (
-    <section style={{ borderBottom: `2px solid ${INK}`, padding: '72px 24px', background: INK }}>
+    <section id="how-it-works" style={{ borderBottom: `2px solid ${INK}`, padding: '72px 24px', background: INK }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 36, borderBottom: '1px solid rgba(242,240,235,0.12)', paddingBottom: 14 }}>
           <h2 style={{ fontFamily: DISPLAY, fontSize: 'clamp(26px, 4vw, 44px)', letterSpacing: '-0.03em', textTransform: 'uppercase', color: PAPER }}>HOW IT WORKS</h2>
@@ -331,7 +331,7 @@ function FAQ() {
 // ─── CTA Banner ───────────────────────────────────────────────────────────────
 function CTABanner() {
   return (
-    <section style={{ borderBottom: `2px solid ${INK}`, padding: '80px 24px', background: PRIMARY }}>
+    <section id="cta" style={{ borderBottom: `2px solid ${INK}`, padding: '80px 24px', background: PRIMARY }}>
       <div className="cta-inner" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 32 }}>
         <div>
           <h2 style={{ fontFamily: DISPLAY, fontSize: 'clamp(40px, 6vw, 80px)', lineHeight: 0.88, letterSpacing: '-0.04em', textTransform: 'uppercase', color: PAPER, marginBottom: 16 }}>
@@ -361,7 +361,7 @@ function CTABanner() {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{ borderTop: `1px solid rgba(10,10,10,0.15)` }}>
+    <footer id="footer" style={{ borderTop: `1px solid rgba(10,10,10,0.15)` }}>
       <div className="footer-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '22px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <Logo size={18} />
