@@ -2,6 +2,7 @@ import SwiftUI
 import AppKit
 import WebKit
 import Carbon
+import UserNotifications
 
 // MARK: - Account Model
 
@@ -88,6 +89,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.contentViewController = NSHostingController(
             rootView: UsageView(accountsManager: accountsManager)
         )
+
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
 
         accountsManager.fetchAllAccounts()
 
@@ -575,19 +578,21 @@ class AccountsManager: ObservableObject {
     }
 
     func sendNotification(percentage: Int, threshold: Int) {
-        let n = NSUserNotification()
-        n.title = "Claude Usage Alert"
-        n.informativeText = "You've reached \(percentage)% of your 5-hour session limit"
-        n.soundName = NSUserNotificationDefaultSoundName
-        NSUserNotificationCenter.default.deliver(n)
+        let content = UNMutableNotificationContent()
+        content.title = "Claude Usage Alert"
+        content.body = "You've reached \(percentage)% of your 5-hour session limit"
+        content.sound = .default
+        let request = UNNotificationRequest(identifier: "usage-\(threshold)", content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 
     func sendTestNotification() {
-        let n = NSUserNotification()
-        n.title = "Claude Usage Alert"
-        n.informativeText = "Test notification - You've reached 75% of your 5-hour session limit"
-        n.soundName = NSUserNotificationDefaultSoundName
-        NSUserNotificationCenter.default.deliver(n)
+        let content = UNMutableNotificationContent()
+        content.title = "Claude Usage Alert"
+        content.body = "Test notification — You've reached 75% of your 5-hour session limit"
+        content.sound = .default
+        let request = UNNotificationRequest(identifier: "usage-test-\(Date().timeIntervalSince1970)", content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 }
 
