@@ -83,7 +83,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         accountsManager = AccountsManager(statusItem: statusItem, delegate: self)
 
         popover = NSPopover()
-        popover.contentSize = NSSize(width: 360, height: 480)
+        popover.contentSize = NSSize(width: 420, height: 520)
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(
             rootView: UsageView(accountsManager: accountsManager)
@@ -208,6 +208,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             DispatchQueue.main.async {
                 self.accountsManager.updatePercentagesForAll()
             }
+            NSApp.activate(ignoringOtherApps: true)
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
             eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
                 if self?.popover.isShown == true {
@@ -717,14 +718,53 @@ struct AccountCard: View {
     let onRefresh: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // Header row
+        GroupBox {
+            if let error = account.errorMessage {
+                Text(error)
+                    .font(.footnote)
+                    .foregroundColor(.orange)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            } else if account.hasFetchedData {
+                VStack(alignment: .leading, spacing: 8) {
+                    UsageBar(
+                        label: "Session (5h)",
+                        percentage: account.sessionPercentage,
+                        resetsAt: account.sessionResetsAt,
+                        includeDate: false
+                    )
+                    UsageBar(
+                        label: "Weekly (7d)",
+                        percentage: account.weeklyPercentage,
+                        resetsAt: account.weeklyResetsAt,
+                        includeDate: true
+                    )
+                    if account.hasWeeklySonnet {
+                        UsageBar(
+                            label: "Weekly Sonnet",
+                            percentage: account.weeklySonnetPercentage,
+                            resetsAt: account.weeklySonnetResetsAt,
+                            includeDate: true
+                        )
+                    }
+                    if let updated = account.lastUpdated {
+                        Text("Updated \(formatTime(updated))")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            } else {
+                Text("Fetching...")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        } label: {
             HStack(spacing: 6) {
                 Circle()
                     .fill(isActive ? Color.green : Color.secondary.opacity(0.4))
                     .frame(width: 7, height: 7)
                 Text(account.label)
-                    .font(.subheadline)
+                    .font(.callout)
                     .fontWeight(isActive ? .semibold : .regular)
                 Spacer()
                 if !isActive {
@@ -734,59 +774,17 @@ struct AccountCard: View {
                         .foregroundColor(.accentColor)
                 }
                 Button(action: onRefresh) {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.caption)
+                    Image(systemName: "arrow.clockwise").font(.caption)
                 }
                 .buttonStyle(.borderless)
                 .foregroundColor(.secondary)
                 Button(action: onDelete) {
-                    Image(systemName: "trash")
-                        .font(.caption)
+                    Image(systemName: "trash").font(.caption)
                 }
                 .buttonStyle(.borderless)
                 .foregroundColor(.secondary)
             }
-
-            // Error or usage data
-            if let error = account.errorMessage {
-                Text(error)
-                    .font(.caption)
-                    .foregroundColor(.orange)
-            } else if account.hasFetchedData {
-                UsageBar(
-                    label: "Session (5h)",
-                    percentage: account.sessionPercentage,
-                    resetsAt: account.sessionResetsAt,
-                    includeDate: false
-                )
-                UsageBar(
-                    label: "Weekly (7d)",
-                    percentage: account.weeklyPercentage,
-                    resetsAt: account.weeklyResetsAt,
-                    includeDate: true
-                )
-                if account.hasWeeklySonnet {
-                    UsageBar(
-                        label: "Weekly Sonnet",
-                        percentage: account.weeklySonnetPercentage,
-                        resetsAt: account.weeklySonnetResetsAt,
-                        includeDate: true
-                    )
-                }
-                if let updated = account.lastUpdated {
-                    Text("Updated \(formatTime(updated))")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                }
-            } else {
-                Text("Fetching...")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
         }
-        .padding(10)
-        .background(Color.secondary.opacity(isActive ? 0.15 : 0.07))
-        .cornerRadius(8)
     }
 
     func formatTime(_ date: Date) -> String {
@@ -805,48 +803,44 @@ struct AddAccountForm: View {
     let onCancel: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("New Account")
-                .font(.caption)
-                .fontWeight(.semibold)
+        GroupBox("New Account") {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .center, spacing: 8) {
+                    Text("Label:")
+                        .font(.footnote)
+                        .frame(width: 45, alignment: .trailing)
+                    TextField("e.g. Work, Personal", text: $label)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.footnote)
+                }
 
-            HStack(alignment: .center, spacing: 8) {
-                Text("Label:")
-                    .font(.caption)
-                TextField("e.g. Work, Personal", text: $label)
-                    .font(.caption)
-                    .textFieldStyle(.roundedBorder)
-            }
+                Text("Session Cookie:")
+                    .font(.footnote)
 
-            Text("Session Cookie:")
-                .font(.caption)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("1. Go to Settings > Usage on claude.ai")
+                    Text("2. Press Cmd+Option+I → Network tab")
+                    Text("3. Refresh page, click the 'usage' request")
+                    Text("4. Copy 'Cookie' value from Request Headers")
+                }
+                .font(.caption2)
+                .foregroundColor(.secondary)
 
-            VStack(alignment: .leading, spacing: 3) {
-                Text("1. Go to Settings > Usage on claude.ai")
-                Text("2. Press Cmd+Option+I → Network tab")
-                Text("3. Refresh page, click the 'usage' request")
-                Text("4. Copy 'Cookie' value from Request Headers")
-            }
-            .font(.caption2)
-            .foregroundColor(.secondary)
+                PasteableTextField(text: $cookie, placeholder: "Paste full cookie string here...")
+                    .frame(height: 60)
+                    .cornerRadius(4)
 
-            PasteableTextField(text: $cookie, placeholder: "Paste full cookie string here...")
-                .frame(height: 60)
-                .cornerRadius(4)
-
-            HStack(spacing: 8) {
-                Button("Save Account") { onSave() }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.small)
-                    .disabled(cookie.isEmpty)
-                Button("Cancel") { onCancel() }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
+                HStack(spacing: 8) {
+                    Button("Save Account") { onSave() }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.small)
+                        .disabled(cookie.isEmpty)
+                    Button("Cancel") { onCancel() }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                }
             }
         }
-        .padding(10)
-        .background(Color.secondary.opacity(0.1))
-        .cornerRadius(8)
     }
 }
 
@@ -859,40 +853,37 @@ struct OnboardingView: View {
     @State private var showingForm: Bool = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Welcome to Claude Usage Monitor!")
-                .font(.subheadline)
-                .fontWeight(.semibold)
+        GroupBox {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Track your Claude.ai session and weekly usage directly from the menu bar. Add your first account to get started.")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
 
-            Text("Track your Claude.ai session and weekly usage directly from the menu bar. Add your first account to get started.")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-
-            if !showingForm {
-                Button("Add Your First Account") {
-                    showingForm = true
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.small)
-            } else {
-                AddAccountForm(label: $label, cookie: $cookie) {
-                    guard !cookie.isEmpty else { return }
-                    accountsManager.addAccount(label: label, cookie: cookie)
-                    label = ""
-                    cookie = ""
-                    showingForm = false
-                } onCancel: {
-                    label = ""
-                    cookie = ""
-                    showingForm = false
+                if !showingForm {
+                    Button("Add Your First Account") { showingForm = true }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.regular)
+                } else {
+                    AddAccountForm(label: $label, cookie: $cookie) {
+                        guard !cookie.isEmpty else { return }
+                        accountsManager.addAccount(label: label, cookie: cookie)
+                        label = ""
+                        cookie = ""
+                        showingForm = false
+                    } onCancel: {
+                        label = ""
+                        cookie = ""
+                        showingForm = false
+                    }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        } label: {
+            Text("Welcome to Claude Usage Monitor!")
+                .font(.callout)
+                .fontWeight(.semibold)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(Color.secondary.opacity(0.07))
-        .cornerRadius(8)
     }
 }
 
@@ -902,81 +893,82 @@ struct SettingsSection: View {
     @ObservedObject var accountsManager: AccountsManager
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Toggle(isOn: Binding(
-                get: { accountsManager.openAtLogin },
-                set: { v in accountsManager.openAtLogin = v; accountsManager.saveSettings() }
-            )) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Open at Login")
-                        .font(.caption)
-                    Text("Launch automatically when you log in")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                }
-            }
-            .toggleStyle(.checkbox)
-
-            VStack(alignment: .leading, spacing: 8) {
+        GroupBox("Settings") {
+            VStack(alignment: .leading, spacing: 12) {
                 Toggle(isOn: Binding(
-                    get: { accountsManager.notificationsEnabled },
-                    set: { v in accountsManager.notificationsEnabled = v; accountsManager.saveSettings() }
+                    get: { accountsManager.openAtLogin },
+                    set: { v in accountsManager.openAtLogin = v; accountsManager.saveSettings() }
                 )) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Enable Notifications")
-                            .font(.caption)
-                        Text("Alerts at 25%, 50%, 75%, and 90% session usage")
+                        Text("Open at Login")
+                            .font(.footnote)
+                        Text("Launch automatically when you log in")
                             .font(.caption2)
                             .foregroundColor(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 .toggleStyle(.checkbox)
 
-                Button("Test Notification") { accountsManager.sendTestNotification() }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-            }
+                Divider()
 
-            Divider()
-
-            VStack(alignment: .leading, spacing: 8) {
-                Toggle(isOn: Binding(
-                    get: { accountsManager.shortcutEnabled },
-                    set: { v in
-                        accountsManager.shortcutEnabled = v
-                        accountsManager.saveSettings()
-                        (NSApplication.shared.delegate as? AppDelegate)?.setShortcutEnabled(v)
+                VStack(alignment: .leading, spacing: 8) {
+                    Toggle(isOn: Binding(
+                        get: { accountsManager.notificationsEnabled },
+                        set: { v in accountsManager.notificationsEnabled = v; accountsManager.saveSettings() }
+                    )) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Enable Notifications")
+                                .font(.footnote)
+                            Text("Alerts at 25%, 50%, 75%, and 90% session usage")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
                     }
-                )) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Keyboard Shortcut (⌘U)")
-                            .font(.caption)
-                        Text("Toggle popup from anywhere. Disable if it conflicts with other apps.")
+                    .toggleStyle(.checkbox)
+
+                    Button("Test Notification") { accountsManager.sendTestNotification() }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                }
+
+                Divider()
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Toggle(isOn: Binding(
+                        get: { accountsManager.shortcutEnabled },
+                        set: { v in
+                            accountsManager.shortcutEnabled = v
+                            accountsManager.saveSettings()
+                            (NSApplication.shared.delegate as? AppDelegate)?.setShortcutEnabled(v)
+                        }
+                    )) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Keyboard Shortcut (⌘U)")
+                                .font(.footnote)
+                            Text("Toggle popup from anywhere. Disable if it conflicts with other apps.")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .toggleStyle(.switch)
+
+                    if accountsManager.shortcutEnabled && !accountsManager.isAccessibilityEnabled {
+                        Button("Grant Accessibility Permission") {
+                            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.small)
+
+                        Text("Accessibility permission may be needed for the shortcut to work in all apps.")
                             .font(.caption2)
                             .foregroundColor(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
-                .toggleStyle(.switch)
-
-                if accountsManager.shortcutEnabled && !accountsManager.isAccessibilityEnabled {
-                    Button("Grant Accessibility Permission") {
-                        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.small)
-
-                    Text("Accessibility permission may be needed for the shortcut to work in all apps.")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
             }
         }
-        .padding(10)
-        .background(Color.secondary.opacity(0.1))
-        .cornerRadius(8)
     }
 }
 
@@ -990,7 +982,7 @@ struct UsageView: View {
     @State private var newCookie: String = ""
 
     var body: some View {
-        ScrollView(.vertical, showsIndicators: true) {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: 12) {
                 // Header
                 HStack {
@@ -999,12 +991,11 @@ struct UsageView: View {
                     Spacer()
                     if accountsManager.isLoading {
                         ProgressView()
-                            .scaleEffect(0.6)
+                            .scaleEffect(0.7)
                             .frame(width: 16, height: 16)
                     } else if !accountsManager.accounts.isEmpty {
                         Button(action: { accountsManager.fetchAllAccounts() }) {
                             Image(systemName: "arrow.clockwise")
-                                .font(.subheadline)
                         }
                         .buttonStyle(.borderless)
                         .help("Refresh all accounts")
@@ -1015,7 +1006,6 @@ struct UsageView: View {
                 if accountsManager.accounts.isEmpty {
                     OnboardingView(accountsManager: accountsManager)
                 } else {
-                    // Account cards
                     ForEach(accountsManager.accounts) { account in
                         AccountCard(
                             account: account,
@@ -1026,7 +1016,6 @@ struct UsageView: View {
                         )
                     }
 
-                    // Add account
                     if showingAddAccount {
                         AddAccountForm(label: $newLabel, cookie: $newCookie) {
                             guard !newCookie.isEmpty else { return }
@@ -1042,27 +1031,27 @@ struct UsageView: View {
                     } else {
                         Button("+ Add Account") { showingAddAccount = true }
                             .buttonStyle(.borderless)
-                            .font(.caption)
+                            .font(.footnote)
                     }
                 }
 
                 Divider()
 
-                // Settings toggle
                 Button(showingSettings ? "Hide Settings" : "Settings") {
                     showingSettings.toggle()
                 }
                 .buttonStyle(.borderless)
-                .font(.caption)
+                .font(.footnote)
 
                 if showingSettings {
                     SettingsSection(accountsManager: accountsManager)
                 }
             }
-            .padding()
-            .frame(width: 360)
+            .padding(16)
+            .frame(width: 420)
         }
-        .frame(width: 360)
+        .frame(width: 420)
+        .background(.ultraThinMaterial)
         .onAppear {
             accountsManager.updatePercentagesForAll()
         }
