@@ -1,0 +1,9 @@
+export const GITHUB   = 'https://github.com/phucbm/claude-usage-monitor'
+export const RELEASES = `${GITHUB}/releases/latest`
+export const ICON     = `${import.meta.env.BASE_URL}icon.png`
+export const PRIMARY  = '#ea6049'
+export const INK      = '#0A0A0A'
+export const PAPER    = '#F2F0EB'
+export const MUTED    = '#6B6B6B'
+export const MONO     = 'JetBrains Mono, monospace'
+export const DISPLAY  = 'Archivo Black, sans-serif'

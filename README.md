@@ -74,7 +74,6 @@ cd app && ./create_dmg.sh
 - **SwiftUI** — Modern macOS UI framework
 - **AppKit** — Menu bar integration
 - **Carbon** — Global keyboard shortcut (Cmd+U)
-- **NSUserNotification** — System notifications (no permissions needed)
 - **UserDefaults** — Local storage for accounts and settings
 
 ## Disclaimer
