@@ -2,8 +2,8 @@
 
 > Track your Claude.ai usage across multiple accounts right from your Mac menu bar.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![macOS](https://img.shields.io/badge/macOS-12.0+-blue.svg)](https://www.apple.com/macos/)
+<img width="1280" height="720" alt="cum-screenshot" src="https://github.com/user-attachments/assets/48391321-1a78-4326-bfb9-5d110e2d39f0" />
+
 
 ---
 
