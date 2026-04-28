@@ -16,7 +16,7 @@ function Logo({ size = 32 }: { size?: number }) {
 }
 
 // ─── Rings mockup ─────────────────────────────────────────────────────────────
-function RingsMockup({ sessionPct, weeklyPct }: { sessionPct: number; weeklyPct: number }) {
+function RingsMockup({ sessionPct, weeklyPct, resetTime }: { sessionPct: number; weeklyPct: number; resetTime: string }) {
   const r1 = 70; const r2 = 46; const cx = 100; const cy = 100
   const c1 = 2 * Math.PI * r1; const c2 = 2 * Math.PI * r2
   const [visible, setVisible] = useState(false)
@@ -42,6 +42,7 @@ function RingsMockup({ sessionPct, weeklyPct }: { sessionPct: number; weeklyPct:
         strokeDasharray={`${(visible ? sessionPct : 0) * c2} ${c2}`}
         transform={`rotate(-90 ${cx} ${cy})`}
         style={{ transition: 'stroke-dasharray 1.2s cubic-bezier(0.4,0,0.2,1) 0.15s' }} />
+      <text x={cx} y={cy + 5} textAnchor="middle" fontFamily={MONO} fontSize="14" fontWeight="700" fill={INK} letterSpacing="-0.02em">{resetTime}</text>
     </svg>
   )
 }
@@ -144,14 +145,26 @@ function Nav() {
 }
 
 // ─── Hero ────────────────────────────────────────────────────────────────────
+function randomTime() {
+  const h = Math.floor(Math.random() * 5)
+  const m = Math.floor(Math.random() * 60)
+  return h > 0 ? `${h}h${m > 0 ? `${m}m` : ''}` : `${m}m`
+}
 function Hero() {
+  const [s, setS] = useState(0.67)
+  const [w, setW] = useState(0.42)
+  const [t, setT] = useState('1h30m')
+  const [s2, setS2] = useState(0.31)
+  const [w2, setW2] = useState(0.78)
+  const [t2, setT2] = useState('3h05m')
+  const randomize = () => {
+    setS(+(Math.random() * 0.88 + 0.06).toFixed(2)); setW(+(Math.random() * 0.88 + 0.06).toFixed(2)); setT(randomTime())
+    setS2(+(Math.random() * 0.88 + 0.06).toFixed(2)); setW2(+(Math.random() * 0.88 + 0.06).toFixed(2)); setT2(randomTime())
+  }
+  useEffect(() => { const id = setInterval(randomize, 2000); return () => clearInterval(id) }, [])
   return (
     <section id="hero" style={{ borderBottom: `2px solid ${INK}` }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: `1px solid rgba(10,10,10,0.18)`, fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED }}>
-          <span>[ REV 1.0 ]</span>
-          <span>macOS 14+ &nbsp;//&nbsp; Apple Silicon + Intel</span>
-        </div>
 
         <div className="hero-grid">
           <div className="hero-text">
@@ -159,7 +172,7 @@ function Hero() {
               /// FREE &amp; OPEN SOURCE MACOS APP
             </p>
             <h1 style={{ fontFamily: DISPLAY, fontSize: 'clamp(56px, 9vw, 116px)', lineHeight: 0.88, letterSpacing: '-0.04em', textTransform: 'uppercase', color: INK, marginBottom: 32 }}>
-              KNOW<br />YOUR<br />LIMITS.
+              CLAUDE<br />USAGE<br /><span style={{color:PRIMARY}}>MONITOR</span>
             </h1>
             <p style={{ fontFamily: MONO, fontSize: 14, lineHeight: 1.75, color: '#3A3A3A', maxWidth: 460, marginBottom: 40 }}>
               Monitor Claude session &amp; weekly usage across <strong>multiple accounts</strong> from your macOS menu bar. Two rings. Always visible. Never surprised by a rate limit again.
@@ -177,43 +190,7 @@ function Hero() {
             </p>
           </div>
 
-          <div className="hero-logo-box" style={{ border: `2px solid ${INK}`, width: 200, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, justifySelf: 'end' }}>
-            <Logo size={144} />
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ─── App Mockup ───────────────────────────────────────────────────────────────
-function AppMockup() {
-  const [s, setS] = useState(0.67)
-  const [w, setW] = useState(0.42)
-  const randomize = () => { setS(+(Math.random() * 0.88 + 0.06).toFixed(2)); setW(+(Math.random() * 0.88 + 0.06).toFixed(2)) }
-
-  return (
-    <section id="mockup" style={{ borderBottom: `2px solid ${INK}`, padding: '72px 24px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div className="grid-2col" style={{ border: `2px solid ${INK}` }}>
-          <div className="mockup-left" style={{ borderRight: `2px solid ${INK}`, padding: '48px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              <p style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: PRIMARY, marginBottom: 16 }}>
-                [ APP PREVIEW ]
-              </p>
-              <h2 style={{ fontFamily: DISPLAY, fontSize: 'clamp(30px, 4vw, 52px)', lineHeight: 0.93, letterSpacing: '-0.03em', textTransform: 'uppercase', color: INK, marginBottom: 24 }}>
-                TWO RINGS.<br />ALL THE<br />CONTEXT.
-              </h2>
-              <p style={{ fontFamily: MONO, fontSize: 12, lineHeight: 1.75, color: '#3A3A3A', maxWidth: 320 }}>
-                Outer ring = weekly limit. Inner ring = current session. Reset time shown inline. No reading required.
-              </p>
-            </div>
-            <button onClick={randomize} className="btn-ghost" style={{ padding: '10px 20px', fontSize: 11, marginTop: 32, alignSelf: 'flex-start', cursor: 'pointer' }}>
-              Randomize data →
-            </button>
-          </div>
-
-          <div style={{ padding: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="hero-logo-box" style={{ justifySelf: 'end', flexShrink: 0 }}>
             <div style={{ border: `2px solid ${INK}`, background: '#fff', width: '100%', maxWidth: 340 }}>
               <div style={{ borderBottom: `2px solid ${INK}`, padding: '9px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Claude Usage Monitor</span>
@@ -224,19 +201,34 @@ function AppMockup() {
                 <span style={{ width: 8, height: 8, background: '#22c55e', border: '1px solid rgba(10,10,10,0.3)', display: 'inline-block' }} />
               </div>
               <div style={{ padding: '20px 16px', display: 'flex', gap: 16, alignItems: 'center' }}>
-                <RingsMockup sessionPct={s} weeklyPct={w} />
+                <RingsMockup sessionPct={s} weeklyPct={w} resetTime={t} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontFamily: MONO, fontSize: 9, color: MUTED, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>Session</p>
                   <p style={{ fontFamily: DISPLAY, fontSize: 30, color: INK, lineHeight: 1, marginBottom: 3 }}>{Math.round(s * 100)}%</p>
-                  <p style={{ fontFamily: MONO, fontSize: 9, color: MUTED, marginBottom: 14 }}>Resets in 2h 14m</p>
+                  <p style={{ fontFamily: MONO, fontSize: 9, color: MUTED, marginBottom: 14 }}>Resets in {t}</p>
                   <p style={{ fontFamily: MONO, fontSize: 9, color: MUTED, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>Weekly</p>
                   <p style={{ fontFamily: DISPLAY, fontSize: 30, color: PRIMARY, lineHeight: 1, marginBottom: 3 }}>{Math.round(w * 100)}%</p>
                   <p style={{ fontFamily: MONO, fontSize: 9, color: MUTED }}>Resets Mon 9:00 AM</p>
                 </div>
               </div>
+              <div style={{ borderTop: '1px solid rgba(10,10,10,0.12)', borderBottom: '1px solid rgba(10,10,10,0.12)', padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700 }}>Work</span>
+                <span style={{ width: 8, height: 8, background: '#22c55e', border: '1px solid rgba(10,10,10,0.3)', display: 'inline-block' }} />
+              </div>
+              <div style={{ padding: '20px 16px', display: 'flex', gap: 16, alignItems: 'center' }}>
+                <RingsMockup sessionPct={s2} weeklyPct={w2} resetTime={t2} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontFamily: MONO, fontSize: 9, color: MUTED, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>Session</p>
+                  <p style={{ fontFamily: DISPLAY, fontSize: 30, color: INK, lineHeight: 1, marginBottom: 3 }}>{Math.round(s2 * 100)}%</p>
+                  <p style={{ fontFamily: MONO, fontSize: 9, color: MUTED, marginBottom: 14 }}>Resets in {t2}</p>
+                  <p style={{ fontFamily: MONO, fontSize: 9, color: MUTED, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>Weekly</p>
+                  <p style={{ fontFamily: DISPLAY, fontSize: 30, color: PRIMARY, lineHeight: 1, marginBottom: 3 }}>{Math.round(w2 * 100)}%</p>
+                  <p style={{ fontFamily: MONO, fontSize: 9, color: MUTED }}>Resets Mon 9:00 AM</p>
+                </div>
+              </div>
               <div style={{ borderTop: '1px solid rgba(10,10,10,0.12)', padding: '8px 16px', display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ fontFamily: MONO, fontSize: 9, color: MUTED }}>Updated just now</span>
-                <span style={{ fontFamily: MONO, fontSize: 9, color: MUTED }}>github.com/phucbm</span>
+                <button onClick={randomize} style={{ fontFamily: MONO, fontSize: 9, color: PRIMARY, background: 'none', border: 'none', cursor: 'pointer', padding: 0, letterSpacing: '0.06em' }}>Randomize →</button>
               </div>
             </div>
           </div>
@@ -390,7 +382,6 @@ export default function App() {
       <Nav />
       <Hero />
       <Ticker />
-      <AppMockup />
       <Features />
       <HowItWorks />
       <FAQ />

@@ -170,7 +170,7 @@ body::before {
     padding: 40px 0 40px;
     gap: 24px;
   }
-  .hero-logo-box { display: none; }
+  .hero-logo-box { justify-self: stretch; }
 
   .grid-2col { grid-template-columns: 1fr; }
   .grid-3col { grid-template-columns: 1fr; }
