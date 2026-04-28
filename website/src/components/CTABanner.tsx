@@ -6,7 +6,7 @@ export default function CTABanner() {
       <div className="container flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
         <div>
           <h2 className="font-display text-[clamp(40px,6vw,80px)] leading-[0.88] tracking-[-0.04em] uppercase text-paper mb-4">
-            KNOW YOUR<br />LIMITS.
+            OWN YOUR<br />LIMITS.
           </h2>
           <p className="font-mono text-xs text-paper/70 tracking-[0.08em] uppercase">
             Free download &nbsp;·&nbsp; No signup &nbsp;·&nbsp; Open source
