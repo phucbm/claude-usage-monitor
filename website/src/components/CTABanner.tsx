@@ -2,11 +2,11 @@ import { GITHUB, RELEASES } from '../constants'
 
 export default function CTABanner() {
   return (
-    <section id="cta" className="border-b-2 border-ink py-[80px] px-6 bg-primary">
-      <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+    <section id="cta" className="border-b-2 border-ink py-[80px] bg-primary">
+      <div className="container flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
         <div>
           <h2 className="font-display text-[clamp(40px,6vw,80px)] leading-[0.88] tracking-[-0.04em] uppercase text-paper mb-4">
-            STOP<br />GUESSING.
+            KNOW YOUR<br />LIMITS.
           </h2>
           <p className="font-mono text-xs text-paper/70 tracking-[0.08em] uppercase">
             Free download &nbsp;·&nbsp; No signup &nbsp;·&nbsp; Open source

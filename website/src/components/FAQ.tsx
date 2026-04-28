@@ -2,8 +2,8 @@ import { FAQS } from '../data'
 
 export default function FAQ() {
   return (
-    <section id="faq" className="border-b-2 border-ink py-[72px] px-6">
-      <div className="max-w-[1200px] mx-auto">
+    <section id="faq" className="border-b-2 border-ink py-[72px]">
+      <div className="container">
         <div className="flex justify-between items-baseline mb-9 border-b border-ink/20 pb-[14px]">
           <h2 className="font-display text-[clamp(26px,4vw,44px)] tracking-[-0.03em] uppercase text-ink">FAQ</h2>
           <span className="font-mono text-[11px] text-muted tracking-[0.1em] uppercase">{String(FAQS.length).padStart(2, '0')} ENTRIES</span>

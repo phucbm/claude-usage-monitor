@@ -25,7 +25,7 @@ export default function Hero() {
 
   return (
     <section id="hero" className="border-b-2 border-ink">
-      <div className="max-w-[1200px] mx-auto px-6">
+      <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-end py-[40px] md:pt-16 md:pb-14">
 
           {/* Text */}

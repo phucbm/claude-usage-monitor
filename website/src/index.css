@@ -2,6 +2,12 @@
 @import "tailwindcss";
 @source "../src";
 
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  max-width: 1200px;
+}
+
 @theme {
   --color-primary: #ea6049;
   --color-ink:     #0A0A0A;

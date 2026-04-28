@@ -80,7 +80,7 @@ function Step({ step, index, last }: StepProps) {
 export default function HowItWorks() {
   return (
     <section id="how-it-works" className="border-b-2 border-ink pb-12">
-      <div className="max-w-[1200px] mx-auto px-6">
+      <div className="container">
         <div className="flex justify-between items-baseline pt-12 pb-9 border-b border-ink/20">
           <h2 className="font-display text-[clamp(26px,4vw,44px)] tracking-[-0.03em] uppercase text-ink">SETUP GUIDE</h2>
           <span className="font-mono text-[11px] text-muted tracking-[0.1em] uppercase">04 STEPS</span>
@@ -88,7 +88,7 @@ export default function HowItWorks() {
       </div>
 
       {STEPS.map((step, i) => (
-        <div key={step.n} className="max-w-[1200px] mx-auto px-6">
+        <div key={step.n} className="container">
           <Step step={step} index={i} last={i === STEPS.length - 1} />
         </div>
       ))}

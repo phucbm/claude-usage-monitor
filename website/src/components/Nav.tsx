@@ -14,7 +14,7 @@ export default function Nav() {
   return (
     <>
       <nav id="nav" className="border-b-2 border-ink sticky top-0 bg-paper z-[100]">
-        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-14">
+        <div className="container flex items-center justify-between h-14">
           <a href="#" className="flex items-center gap-[10px] no-underline text-ink">
             <Logo size={26} />
             <span className="font-mono font-bold text-[12px] tracking-[0.06em] uppercase">
