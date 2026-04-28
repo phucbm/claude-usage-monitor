@@ -78,6 +78,7 @@ struct AccountCard: View {
 
     private var usageRings: some View {
         HStack(alignment: .center, spacing: 16) {
+            ZStack {
             Canvas { ctx, size in
                 let center = CGPoint(x: size.width / 2, y: size.height / 2)
                 let outerRadius: CGFloat = 50
@@ -123,6 +124,13 @@ struct AccountCard: View {
                 }
             }
             .frame(width: 118, height: 118)
+            if let label = timeToRest(account.sessionResetsAt) {
+                Text(label)
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundColor(Color(red: 0xea/255.0, green: 0x60/255.0, blue: 0x49/255.0))
+                    .monospacedDigit()
+            }
+            } // ZStack
 
             VStack(alignment: .leading, spacing: 2) {
                 // Session
@@ -181,6 +189,15 @@ struct AccountCard: View {
 
     private func formatTime(_ date: Date) -> String {
         let f = DateFormatter(); f.timeStyle = .short; return f.string(from: date)
+    }
+
+    private func timeToRest(_ date: Date?) -> String? {
+        guard let date else { return nil }
+        let secs = date.timeIntervalSince(Date())
+        guard secs > 0 else { return nil }
+        let h = Int(secs) / 3600
+        let m = (Int(secs) % 3600) / 60
+        return h > 0 ? "\(h)h\(m)m" : "\(m)m"
     }
 
     private func formatRelative(_ date: Date) -> String {
