@@ -14,22 +14,36 @@ struct AccountCard: View {
 
     var body: some View {
         GroupBox {
-            VStack(alignment: .leading, spacing: 8) {
-                // Usage content or status
+            VStack(alignment: .leading, spacing: 10) {
                 if let error = account.errorMessage {
                     Text(error).font(.footnote).foregroundColor(.orange)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 } else if account.hasFetchedData {
-                    UsageBar(label: "Session (5h)", percentage: account.sessionPercentage,
-                             resetsAt: account.sessionResetsAt, includeDate: false)
-                    UsageBar(label: "Weekly (7d)", percentage: account.weeklyPercentage,
-                             resetsAt: account.weeklyResetsAt, includeDate: true)
+                    // SECTION 1 — Plan usage limits
+                    sectionHeader("Plan usage limits")
+                    UsageBar(label: "Current session",
+                             percentage: account.sessionPercentage,
+                             resetsAt: account.sessionResetsAt,
+                             resetStyle: .relative)
+
+                    // SECTION 2 — Weekly limits
+                    Divider().padding(.vertical, 2)
+                    sectionHeader("Weekly limits")
+                    UsageBar(label: "All models",
+                             percentage: account.weeklyPercentage,
+                             resetsAt: account.weeklyResetsAt,
+                             resetStyle: .absolute)
                     if account.hasWeeklySonnet {
-                        UsageBar(label: "Weekly Sonnet", percentage: account.weeklySonnetPercentage,
-                                 resetsAt: account.weeklySonnetResetsAt, includeDate: true)
+                        UsageBar(label: "Sonnet",
+                                 percentage: account.weeklySonnetPercentage,
+                                 resetsAt: account.weeklySonnetResetsAt,
+                                 resetStyle: .absolute)
                     }
+
                     if let updated = account.lastUpdated {
-                        Text("Updated \(formatTime(updated))").font(.caption2).foregroundColor(.secondary)
+                        Text("Updated \(formatTime(updated))")
+                            .font(.caption2).foregroundColor(.secondary)
+                            .padding(.top, 2)
                     }
                 } else {
                     Text("Fetching...").font(.footnote).foregroundColor(.secondary)
@@ -86,6 +100,13 @@ struct AccountCard: View {
                 }
             }
         }
+    }
+
+    private func sectionHeader(_ title: String) -> some View {
+        Text(title.uppercased())
+            .font(.system(size: 10, weight: .medium))
+            .foregroundColor(.secondary)
+            .kerning(0.4)
     }
 
     private func commitRename() {
