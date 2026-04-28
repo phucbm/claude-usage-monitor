@@ -101,7 +101,7 @@ struct AccountCard: View {
                     ctx.stroke(
                         Path { p in p.addArc(center: center, radius: outerRadius,
                                              startAngle: start, endAngle: start + .degrees(360 * weeklyPct), clockwise: false) },
-                        with: .color(Color(nsColor: .systemGreen)),
+                        with: .color(Color(nsColor: .systemBlue)),
                         style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
                     )
                 }
@@ -117,7 +117,7 @@ struct AccountCard: View {
                     ctx.stroke(
                         Path { p in p.addArc(center: center, radius: innerRadius,
                                              startAngle: start, endAngle: start + .degrees(360 * sessionPct), clockwise: false) },
-                        with: .color(Color(nsColor: .systemOrange)),
+                        with: .color(Color(red: 1.0, green: 0.48, blue: 0.0)),
                         style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
                     )
                 }
@@ -132,7 +132,7 @@ struct AccountCard: View {
                 HStack(alignment: .firstTextBaseline, spacing: 3) {
                     Text("\(Int(min(account.sessionPercentage, 1.0) * 100))")
                         .font(.system(size: 30, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(nsColor: .systemOrange))
+                        .foregroundColor(Color(red: 1.0, green: 0.48, blue: 0.0))
                         .monospacedDigit()
                     if let date = account.sessionResetsAt {
                         Text("% used (\(formatRelative(date)))")
@@ -155,7 +155,7 @@ struct AccountCard: View {
                 HStack(alignment: .firstTextBaseline, spacing: 3) {
                     Text("\(Int(min(account.weeklyPercentage, 1.0) * 100))")
                         .font(.system(size: 30, weight: .semibold, design: .rounded))
-                        .foregroundColor(Color(nsColor: .systemGreen))
+                        .foregroundColor(Color(nsColor: .systemBlue))
                         .monospacedDigit()
                     if let date = account.weeklyResetsAt {
                         Text("% used (\(formatAbsolute(date)))")

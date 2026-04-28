@@ -29,8 +29,15 @@ struct UsageView: View {
                 }
             }
             .frame(width: 420)
+
+            Divider()
+
+            Link("github.com/phucbm/claude-usage-monitor", destination: URL(string: "https://github.com/phucbm/claude-usage-monitor")!)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .padding(.vertical, 7)
         }
-        .background(.ultraThinMaterial)
+        .background(Color.white)
         .frame(width: 420)
         .onAppear { accountsManager.updatePercentagesForAll() }
     }
