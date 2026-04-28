@@ -3,25 +3,11 @@ import './index.css'
 
 const GITHUB = 'https://github.com/phucbm/claude-usage-monitor'
 const RELEASES = `${GITHUB}/releases/latest`
+const ICON = `${import.meta.env.BASE_URL}icon.png`
 
 // ─── Logo ─────────────────────────────────────────────────────────────────────
-function Logo({ size = 32, color = 'currentColor' }: { size?: number; color?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {Array.from({ length: 12 }).map((_, i) => {
-        const a = (i * 30 * Math.PI) / 180
-        return (
-          <line key={i}
-            x1={50 + 18 * Math.cos(a)} y1={50 + 18 * Math.sin(a)}
-            x2={50 + 44 * Math.cos(a)} y2={50 + 44 * Math.sin(a)}
-            stroke={color} strokeWidth="7" strokeLinecap="square"
-          />
-        )
-      })}
-      <circle cx="50" cy="50" r="44" stroke={color} strokeWidth="5" fill="none" />
-      <circle cx="50" cy="50" r="14" stroke={color} strokeWidth="5" fill="none" />
-    </svg>
-  )
+function Logo({ size = 32 }: { size?: number }) {
+  return <img src={ICON} alt="Claude Usage Monitor" width={size} height={size} style={{ display: 'block', objectFit: 'contain' }} />
 }
 
 // ─── Rings mockup ─────────────────────────────────────────────────────────────
@@ -118,14 +104,17 @@ function Nav() {
           </span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          {[{ label: 'Features', href: '#features' }, { label: 'FAQ', href: '#faq' }, { label: 'GitHub', href: GITHUB, ext: true }].map(({ label, href, ext }) => (
-            <a key={label} href={href} target={ext ? '_blank' : undefined} rel={ext ? 'noopener noreferrer' : undefined}
-              style={linkStyle()}
-              onMouseEnter={e => { e.currentTarget.style.background = '#E61919'; e.currentTarget.style.color = '#fff' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0A0A0A' }}
-            >{label}</a>
-          ))}
+          <div className="nav-links" style={{ display: 'flex', alignItems: 'center' }}>
+            {[{ label: 'Features', href: '#features' }, { label: 'FAQ', href: '#faq' }, { label: 'GitHub', href: GITHUB, ext: true }].map(({ label, href, ext }) => (
+              <a key={label} href={href} target={ext ? '_blank' : undefined} rel={ext ? 'noopener noreferrer' : undefined}
+                style={linkStyle()}
+                onMouseEnter={e => { e.currentTarget.style.background = '#E61919'; e.currentTarget.style.color = '#fff' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0A0A0A' }}
+              >{label}</a>
+            ))}
+          </div>
           <a href={RELEASES} target="_blank" rel="noopener noreferrer"
+            className="nav-download"
             style={linkStyle({ background: '#0A0A0A', color: '#F2F0EB', borderLeft: '2px solid #0A0A0A' })}
             onMouseEnter={e => { e.currentTarget.style.background = '#E61919'; e.currentTarget.style.borderColor = '#E61919' }}
             onMouseLeave={e => { e.currentTarget.style.background = '#0A0A0A'; e.currentTarget.style.borderColor = '#0A0A0A' }}
@@ -145,8 +134,8 @@ function Hero() {
           <span>[ REV 1.0 ]</span>
           <span>macOS 14+ &nbsp;//&nbsp; Apple Silicon + Intel</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 40, alignItems: 'end', padding: '64px 0 56px' }}>
-          <div>
+        <div className="grid-2col" style={{ gap: 40, alignItems: 'end', padding: '64px 0 56px' }}>
+          <div className="hero-text">
             <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#E61919', marginBottom: 18 }}>
               /// FREE &amp; OPEN SOURCE MACOS APP
             </p>
@@ -156,7 +145,7 @@ function Hero() {
             <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 14, lineHeight: 1.75, color: '#3A3A3A', maxWidth: 460, marginBottom: 40 }}>
               Monitor Claude session &amp; weekly usage across <strong>multiple accounts</strong> from your macOS menu bar. Two rings. Always visible. Never surprised by a rate limit again.
             </p>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
               <a href={RELEASES} target="_blank" rel="noopener noreferrer"
                 className="btn-primary" style={{ padding: '15px 32px', fontSize: 12 }}>
                 ↓ Download .dmg
@@ -170,7 +159,7 @@ function Hero() {
               Free &nbsp;·&nbsp; MIT License &nbsp;·&nbsp; No account needed
             </p>
           </div>
-          <div style={{ border: '2px solid #0A0A0A', width: 200, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div className="hero-logo-box" style={{ border: '2px solid #0A0A0A', width: 200, height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, justifySelf: 'end' }}>
             <Logo size={144} />
           </div>
         </div>
@@ -188,8 +177,8 @@ function AppMockup() {
   return (
     <section style={{ borderBottom: '2px solid #0A0A0A', padding: '72px 24px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, border: '2px solid #0A0A0A' }}>
-          <div style={{ borderRight: '2px solid #0A0A0A', padding: '48px 48px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div className="grid-2col" style={{ gap: 0, border: '2px solid #0A0A0A' }}>
+          <div className="mockup-left" style={{ borderRight: '2px solid #0A0A0A', padding: '48px 48px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#E61919', marginBottom: 16 }}>
                 [ APP PREVIEW ]
@@ -248,7 +237,7 @@ function Features() {
           <h2 style={{ fontFamily: 'Archivo Black, sans-serif', fontSize: 'clamp(26px, 4vw, 44px)', letterSpacing: '-0.03em', textTransform: 'uppercase', color: '#0A0A0A' }}>WHAT IT DOES</h2>
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#6B6B6B', letterSpacing: '0.1em', textTransform: 'uppercase' }}>06 MODULES</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0, border: '2px solid #0A0A0A' }}>
+        <div className="grid-3col" style={{ gap: 0, border: '2px solid #0A0A0A' }}>
           {FEATURES.map((f, i) => {
             const isHov = hovered === i
             return (
@@ -290,7 +279,7 @@ function HowItWorks() {
           <h2 style={{ fontFamily: 'Archivo Black, sans-serif', fontSize: 'clamp(26px, 4vw, 44px)', letterSpacing: '-0.03em', textTransform: 'uppercase', color: '#F2F0EB' }}>HOW IT WORKS</h2>
           <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#555', letterSpacing: '0.1em', textTransform: 'uppercase' }}>03 STEPS</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', border: '1px solid rgba(242,240,235,0.15)' }}>
+        <div className="grid-3col" style={{ border: '1px solid rgba(242,240,235,0.15)' }}>
           {steps.map((s, i) => (
             <div key={s.n} style={{ padding: 40, borderRight: i < 2 ? '1px solid rgba(242,240,235,0.15)' : 'none' }}>
               <p style={{ fontFamily: 'Archivo Black, sans-serif', fontSize: 64, color: '#E61919', lineHeight: 1, marginBottom: 20, letterSpacing: '-0.04em' }}>{s.n}</p>
@@ -315,8 +304,7 @@ function FAQ() {
         </div>
         <div>
           {FAQS.map((faq, i) => (
-            <div key={i} className="faq-item"
-              style={{ borderTop: i === 0 ? '1px solid #0A0A0A' : 'none', borderBottom: '1px solid #0A0A0A', padding: '22px 22px 22px 18px', display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: 32 }}>
+            <div key={i} className="faq-item" style={{ borderTop: i === 0 ? '1px solid #0A0A0A' : 'none', borderBottom: '1px solid #0A0A0A', padding: '22px 22px 22px 18px', display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: 32 }}>
               <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#0A0A0A', lineHeight: 1.6 }}>
                 <span style={{ color: '#E61919', marginRight: 8 }}>Q/</span>{faq.q}
               </p>
@@ -333,7 +321,7 @@ function FAQ() {
 function CTABanner() {
   return (
     <section style={{ borderBottom: '2px solid #0A0A0A', padding: '80px 24px', background: '#E61919' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 32, flexWrap: 'wrap' }}>
+      <div className="cta-inner" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 32, flexWrap: 'wrap' }}>
         <div>
           <h2 style={{ fontFamily: 'Archivo Black, sans-serif', fontSize: 'clamp(40px, 6vw, 80px)', lineHeight: 0.88, letterSpacing: '-0.04em', textTransform: 'uppercase', color: '#F2F0EB', marginBottom: 16 }}>
             STOP<br />GUESSING.
@@ -362,7 +350,7 @@ function CTABanner() {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{ padding: '22px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+    <footer className="footer-inner" style={{ padding: '22px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, maxWidth: 1200, margin: '0 auto', width: '100%' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <Logo size={18} />
         <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#6B6B6B', letterSpacing: '0.06em' }}>

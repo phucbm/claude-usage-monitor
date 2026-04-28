@@ -109,3 +109,61 @@ body::before {
   background: var(--ink);
   color: var(--paper);
 }
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.flex-row-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  /* Nav: hide text links, keep logo + download */
+  .nav-links { display: none; }
+  .nav-download { border-left: 2px solid #0A0A0A !important; }
+
+  /* Collapse all multi-col grids to single column */
+  .grid-2col,
+  .grid-3col {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Remove right border on grid children (only relevant between cols) */
+  .grid-2col > *,
+  .grid-3col > * {
+    border-right: none !important;
+  }
+
+  /* Keep bottom border between stacked rows */
+  .grid-2col > *:not(:last-child),
+  .grid-3col > *:not(:last-child) {
+    border-bottom: 1px solid #0A0A0A !important;
+  }
+
+  /* Hero: hide logo box on mobile, full-width text */
+  .hero-logo-box { display: none !important; }
+  .hero-text { max-width: 100% !important; }
+
+  /* AppMockup: remove inner right border */
+  .mockup-left { border-right: none !important; border-bottom: 2px solid #0A0A0A !important; }
+
+  /* CTA banner: stack vertically */
+  .cta-inner { flex-direction: column !important; gap: 24px !important; }
+
+  /* FAQ: single column */
+  .faq-item { grid-template-columns: 1fr !important; gap: 10px !important; }
+
+  /* Footer: stack */
+  .footer-inner { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+
+  /* General padding reduction */
+  section { padding-left: 16px !important; padding-right: 16px !important; }
+  .section-inner { padding: 0 16px !important; }
+}
