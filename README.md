@@ -5,10 +5,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/macOS-12.0+-blue.svg)](https://www.apple.com/macos/)
 
-**Inspired by [ClaudeUsageBar](https://github.com/Artzainnn/ClaudeUsageBar) by Artzainnn** — this fork adds multi-account support and a redesigned popup UI.
-
-**Author:** [phucbm](https://github.com/phucbm)
-
 ---
 
 ## Features
@@ -76,6 +72,8 @@ cd app && ./create_dmg.sh
 ## Disclaimer
 
 This app uses Claude.ai's internal API endpoints which may change without notice. It is not affiliated with or endorsed by Anthropic. Use at your own risk.
+
+**Inspired by [ClaudeUsageBar](https://github.com/Artzainnn/ClaudeUsageBar) by Artzainnn** — this fork adds multi-account support and a redesigned popup UI.
 
 ## License
 
