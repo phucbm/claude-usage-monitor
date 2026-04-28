@@ -17,16 +17,16 @@ mkdir -p "$APP_PATH/Contents/Resources"
 cp Info.plist "$APP_PATH/Contents/"
 
 # Create icon if it doesn't exist
-if [ ! -f "ClaudeUsageBar.icns" ]; then
+if [ ! -f "ClaudeUsageMonitor.icns" ]; then
     echo "Creating app icon..."
     ./make_app_icon.sh >/dev/null 2>&1
 fi
 
 # Copy icon to Resources
-if [ -f "ClaudeUsageBar.icns" ]; then
-    cp ClaudeUsageBar.icns "$APP_PATH/Contents/Resources/"
-    /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string ClaudeUsageBar" "$APP_PATH/Contents/Info.plist" 2>/dev/null || \
-    /usr/libexec/PlistBuddy -c "Set :CFBundleIconFile ClaudeUsageBar" "$APP_PATH/Contents/Info.plist"
+if [ -f "ClaudeUsageMonitor.icns" ]; then
+    cp ClaudeUsageMonitor.icns "$APP_PATH/Contents/Resources/"
+    /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string ClaudeUsageMonitor" "$APP_PATH/Contents/Info.plist" 2>/dev/null || \
+    /usr/libexec/PlistBuddy -c "Set :CFBundleIconFile ClaudeUsageMonitor" "$APP_PATH/Contents/Info.plist"
 fi
 
 # Compile for arm64
