@@ -1,22 +1,20 @@
-import { GITHUB, MONO, MUTED, PRIMARY, RELEASES } from '../constants'
+import { GITHUB, RELEASES } from '../constants'
 import Logo from './Logo'
 
 export default function Footer() {
   return (
-    <footer id="footer" style={{ borderTop: `1px solid rgba(10,10,10,0.15)` }}>
-      <div className="footer-inner" style={{ maxWidth: 1200, margin: '0 auto', padding: '22px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+    <footer id="footer" className="border-t border-ink/15">
+      <div className="max-w-[1200px] mx-auto px-6 py-[22px] flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div className="flex items-center gap-3">
           <Logo size={18} />
-          <span style={{ fontFamily: MONO, fontSize: 10, color: MUTED, letterSpacing: '0.06em' }}>
+          <span className="font-mono text-[10px] text-muted tracking-[0.06em]">
             © 2026 Claude Usage Monitor &nbsp;·&nbsp; MIT License
           </span>
         </div>
-        <div style={{ display: 'flex' }}>
+        <div className="flex">
           {[{ label: 'GitHub', href: GITHUB }, { label: 'Releases', href: RELEASES }].map(({ label, href }) => (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-              style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', padding: '0 14px', borderLeft: '1px solid rgba(10,10,10,0.2)', transition: 'color 0.1s' }}
-              onMouseEnter={e => { e.currentTarget.style.color = PRIMARY }}
-              onMouseLeave={e => { e.currentTarget.style.color = MUTED }}
+              className="font-mono text-[10px] tracking-[0.08em] uppercase text-muted no-underline px-[14px] border-l border-ink/20 transition-colors duration-100 hover:text-primary"
             >{label}</a>
           ))}
         </div>

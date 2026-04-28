@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { GITHUB, INK, MONO, PAPER, PRIMARY, RELEASES } from '../constants'
+import { GITHUB, RELEASES } from '../constants'
 import Logo from './Logo'
 
 export default function Nav() {
@@ -13,28 +13,26 @@ export default function Nav() {
 
   return (
     <>
-      <nav id="nav" style={{ borderBottom: `2px solid ${INK}`, position: 'sticky', top: 0, background: PAPER, zIndex: 100 }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 }}>
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: INK }}>
+      <nav id="nav" className="border-b-2 border-ink sticky top-0 bg-paper z-[100]">
+        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-14">
+          <a href="#" className="flex items-center gap-[10px] no-underline text-ink">
             <Logo size={26} />
-            <span style={{ fontFamily: MONO, fontWeight: 700, fontSize: 12, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            <span className="font-mono font-bold text-[12px] tracking-[0.06em] uppercase">
               Claude Usage Monitor
             </span>
           </a>
 
           {/* Desktop links */}
-          <div className="nav-links" style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="hidden md:flex items-center">
             {navLinks.map(({ label, href, ext }) => (
-              <a key={label} href={href} target={ext ? '_blank' : undefined} rel={ext ? 'noopener noreferrer' : undefined}
-                style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', color: INK, padding: '0 18px', height: 56, display: 'flex', alignItems: 'center', borderLeft: `1px solid ${INK}`, transition: 'background 0.1s, color 0.1s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = PRIMARY; e.currentTarget.style.color = '#fff' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = INK }}
+              <a key={label} href={href}
+                target={ext ? '_blank' : undefined}
+                rel={ext ? 'noopener noreferrer' : undefined}
+                className="font-mono text-[11px] font-bold tracking-[0.1em] uppercase no-underline text-ink px-[18px] h-14 flex items-center border-l border-ink transition-colors duration-100 hover:bg-primary hover:text-white"
               >{label}</a>
             ))}
             <a href={RELEASES} target="_blank" rel="noopener noreferrer"
-              style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', color: '#fff', padding: '0 20px', height: 56, display: 'flex', alignItems: 'center', background: PRIMARY, borderLeft: `2px solid ${PRIMARY}`, transition: 'background 0.1s' }}
-              onMouseEnter={e => { e.currentTarget.style.background = INK; e.currentTarget.style.borderColor = INK }}
-              onMouseLeave={e => { e.currentTarget.style.background = PRIMARY; e.currentTarget.style.borderColor = PRIMARY }}
+              className="font-mono text-[11px] font-bold tracking-[0.1em] uppercase no-underline text-white px-5 h-14 flex items-center bg-primary border-l-2 border-primary transition-colors duration-100 hover:bg-ink hover:border-ink"
             >Download</a>
           </div>
 

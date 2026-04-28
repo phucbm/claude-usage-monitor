@@ -1,30 +1,28 @@
-import { useState } from 'react'
-import { DISPLAY, INK, MONO, MUTED, PAPER, PRIMARY } from '../constants'
 import { FEATURES } from '../data'
 
 export default function Features() {
-  const [hov, setHov] = useState<number | null>(null)
   return (
-    <section id="features" style={{ borderBottom: `2px solid ${INK}`, padding: '72px 24px' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 36, borderBottom: '1px solid rgba(10,10,10,0.2)', paddingBottom: 14 }}>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: 'clamp(26px, 4vw, 44px)', letterSpacing: '-0.03em', textTransform: 'uppercase', color: INK }}>WHAT IT DOES</h2>
-          <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.1em', textTransform: 'uppercase' }}>06 MODULES</span>
+    <section id="features" className="border-b-2 border-ink py-[72px] px-6">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="flex justify-between items-baseline mb-9 border-b border-ink/20 pb-[14px]">
+          <h2 className="font-display text-[clamp(26px,4vw,44px)] tracking-[-0.03em] uppercase text-ink">WHAT IT DOES</h2>
+          <span className="font-mono text-[11px] text-muted tracking-[0.1em] uppercase">06 MODULES</span>
         </div>
-        <div className="grid-3col" style={{ border: `2px solid ${INK}` }}>
-          {FEATURES.map((f, i) => {
-            const on = hov === i
-            return (
-              <div key={f.id}
-                onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}
-                style={{ padding: 32, background: on ? INK : 'transparent', borderRight: i % 3 !== 2 ? `1px solid ${INK}` : 'none', borderBottom: i < 3 ? `1px solid ${INK}` : 'none', transition: 'background 0.12s', cursor: 'default' }}
-              >
-                <p style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: PRIMARY, letterSpacing: '0.1em', marginBottom: 12 }}>[{f.id}]</p>
-                <p style={{ fontFamily: DISPLAY, fontSize: 15, textTransform: 'uppercase', color: on ? PAPER : INK, marginBottom: 12, transition: 'color 0.12s' }}>{f.label}</p>
-                <p style={{ fontFamily: MONO, fontSize: 12, lineHeight: 1.75, color: on ? '#9A9A9A' : '#3A3A3A', transition: 'color 0.12s' }}>{f.body}</p>
-              </div>
-            )
-          })}
+        <div className="grid grid-cols-1 md:grid-cols-3 border-2 border-ink">
+          {FEATURES.map((f, i) => (
+            <div key={f.id}
+              className={[
+                'group p-8 transition-colors duration-[120ms] cursor-default hover:bg-ink',
+                i % 3 !== 2 ? 'md:border-r border-ink' : '',
+                i < FEATURES.length - 1 ? 'border-b border-ink' : '',
+                i >= 3 ? 'md:border-b-0' : '',
+              ].join(' ')}
+            >
+              <p className="font-mono text-[11px] font-bold text-primary tracking-[0.1em] mb-3">[{f.id}]</p>
+              <p className="font-display text-[15px] uppercase text-ink group-hover:text-paper mb-3 transition-colors duration-[120ms]">{f.label}</p>
+              <p className="font-mono text-xs leading-[1.75] text-[#3A3A3A] group-hover:text-[#9A9A9A] transition-colors duration-[120ms]">{f.body}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

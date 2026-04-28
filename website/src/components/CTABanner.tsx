@@ -1,27 +1,23 @@
-import { DISPLAY, GITHUB, INK, MONO, PAPER, PRIMARY, RELEASES } from '../constants'
+import { GITHUB, RELEASES } from '../constants'
 
 export default function CTABanner() {
   return (
-    <section id="cta" style={{ borderBottom: `2px solid ${INK}`, padding: '80px 24px', background: PRIMARY }}>
-      <div className="cta-inner" style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 32 }}>
+    <section id="cta" className="border-b-2 border-ink py-[80px] px-6 bg-primary">
+      <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
         <div>
-          <h2 style={{ fontFamily: DISPLAY, fontSize: 'clamp(40px, 6vw, 80px)', lineHeight: 0.88, letterSpacing: '-0.04em', textTransform: 'uppercase', color: PAPER, marginBottom: 16 }}>
+          <h2 className="font-display text-[clamp(40px,6vw,80px)] leading-[0.88] tracking-[-0.04em] uppercase text-paper mb-4">
             STOP<br />GUESSING.
           </h2>
-          <p style={{ fontFamily: MONO, fontSize: 12, color: 'rgba(242,240,235,0.7)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          <p className="font-mono text-xs text-paper/70 tracking-[0.08em] uppercase">
             Free download &nbsp;·&nbsp; No signup &nbsp;·&nbsp; Open source
           </p>
         </div>
-        <div className="cta-buttons" style={{ display: 'flex', gap: 10 }}>
+        <div className="flex flex-col md:flex-row gap-[10px]">
           <a href={RELEASES} target="_blank" rel="noopener noreferrer"
-            style={{ fontFamily: MONO, fontWeight: 700, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', background: PAPER, color: INK, padding: '18px 32px', textDecoration: 'none', border: `2px solid ${PAPER}`, transition: 'background 0.1s, color 0.1s, border-color 0.1s' }}
-            onMouseEnter={e => { e.currentTarget.style.background = INK; e.currentTarget.style.color = PAPER; e.currentTarget.style.borderColor = INK }}
-            onMouseLeave={e => { e.currentTarget.style.background = PAPER; e.currentTarget.style.color = INK; e.currentTarget.style.borderColor = PAPER }}
+            className="font-mono font-bold text-xs tracking-[0.08em] uppercase no-underline bg-paper text-ink py-[18px] px-8 border-2 border-paper transition-colors duration-100 hover:bg-ink hover:text-paper hover:border-ink"
           >↓ Download for macOS</a>
           <a href={GITHUB} target="_blank" rel="noopener noreferrer"
-            style={{ fontFamily: MONO, fontWeight: 700, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', background: 'transparent', color: PAPER, padding: '18px 32px', textDecoration: 'none', border: `2px solid rgba(242,240,235,0.5)`, transition: 'border-color 0.1s, background 0.1s' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(242,240,235,0.12)'; e.currentTarget.style.borderColor = PAPER }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(242,240,235,0.5)' }}
+            className="font-mono font-bold text-xs tracking-[0.08em] uppercase no-underline bg-transparent text-paper py-[18px] px-8 border-2 border-paper/50 transition-colors duration-100 hover:bg-paper/[0.12] hover:border-paper"
           >GitHub →</a>
         </div>
       </div>

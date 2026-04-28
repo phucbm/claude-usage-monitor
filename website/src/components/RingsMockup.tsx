@@ -22,7 +22,7 @@ export default function RingsMockup({ sessionPct, weeklyPct, resetTime }: Props)
   useEffect(() => { setVisible(false); const t = setTimeout(() => setVisible(true), 80); return () => clearTimeout(t) }, [sessionPct, weeklyPct])
 
   return (
-    <svg ref={ref} viewBox="0 0 200 200" width="148" height="148" style={{ display: 'block', flexShrink: 0 }}>
+    <svg ref={ref} viewBox="0 0 200 200" width="148" height="148" className="block shrink-0">
       <circle cx={cx} cy={cy} r={r1} fill="none" stroke={INK} strokeWidth="11" strokeOpacity="0.08" />
       <circle cx={cx} cy={cy} r={r2} fill="none" stroke={INK} strokeWidth="11" strokeOpacity="0.08" />
       <circle cx={cx} cy={cy} r={r1} fill="none" stroke={PRIMARY} strokeWidth="11" strokeLinecap="square"
