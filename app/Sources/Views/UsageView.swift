@@ -4,6 +4,7 @@ struct UsageView: View {
     @ObservedObject var accountsManager: AccountsManager
     @State private var selectedTab = 0
     @State private var showingAddAccount = false
+    @State private var animationTrigger: UUID = UUID()
     @State private var newLabel = ""
     @State private var newCookie = ""
 
@@ -34,6 +35,8 @@ struct UsageView: View {
         .background(T.paper)
         .frame(width: 440)
         .onAppear { accountsManager.updatePercentagesForAll() }
+        .onChange(of: accountsManager.animationSeed) { _ in animationTrigger = UUID() }
+        .onChange(of: selectedTab) { newTab in if newTab == 0 { animationTrigger = UUID() } }
     }
 
     // MARK: - Tab bar
@@ -109,6 +112,7 @@ struct UsageView: View {
                     AccountCard(
                         account: account,
                         isActive: accountsManager.activeAccountId == account.id,
+                        animationTrigger: animationTrigger,
                         onSetActive: { accountsManager.setActiveAccount(id: account.id) },
                         onDelete: { accountsManager.deleteAccount(id: account.id) },
                         onRename: { accountsManager.renameAccount(id: account.id, label: $0) },

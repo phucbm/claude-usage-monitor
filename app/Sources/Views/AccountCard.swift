@@ -4,6 +4,7 @@ import AppKit
 struct AccountCard: View {
     let account: Account
     let isActive: Bool
+    let animationTrigger: UUID
     let onSetActive: () -> Void
     let onDelete: () -> Void
     let onRename: (String) -> Void
@@ -130,7 +131,8 @@ struct AccountCard: View {
             UsageRings(
                 sessionPct: account.sessionPercentage,
                 weeklyPct: account.weeklyPercentage,
-                resetLabel: timeToReset(account.sessionResetsAt)
+                resetLabel: timeToReset(account.sessionResetsAt),
+                trigger: animationTrigger
             )
 
             VStack(alignment: .leading, spacing: 2) {

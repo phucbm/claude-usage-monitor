@@ -9,6 +9,7 @@ class AccountsManager: ObservableObject {
     @Published var openAtLogin: Bool = false
     @Published var shortcutEnabled: Bool = true
     @Published var isAccessibilityEnabled: Bool = false
+    @Published var animationSeed: UUID = UUID()
 
     private weak var delegate: AppDelegate?
 

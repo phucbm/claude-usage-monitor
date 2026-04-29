@@ -4,7 +4,7 @@ import Carbon
 
 private let kPanelOriginKey = "FloatingPanelOrigin"
 private let kPanelWidth: CGFloat = 440
-private let kPanelHeight: CGFloat = 520
+private let kPanelHeight: CGFloat = 530
 private let kPanelMargin: CGFloat = 20
 private let kCornerRadius: CGFloat = 0
 
@@ -78,13 +78,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     private func createBadgesImage(for accounts: [Account]) -> NSImage {
-        let font = NSFont(name: "JetBrains Mono", size: 10) ?? NSFont.monospacedDigitSystemFont(ofSize: 10, weight: .bold)
-        let orange = NSColor(red: 0xEA/255, green: 0x60/255, blue: 0x49/255, alpha: 1.0)
-        let bg = NSColor(red: 0xEA/255, green: 0x60/255, blue: 0x49/255, alpha: 0.13)
+        let font = NSFont(name: "JetBrains Mono", size: 12) ?? NSFont.monospacedDigitSystemFont(ofSize: 10, weight: .bold)
         let hPad: CGFloat = 5
         let height: CGFloat = 16
         let spacing: CGFloat = 4
-        let radius: CGFloat = 0
 
         let attrs: [NSAttributedString.Key: Any] = [.font: font]
 
@@ -100,13 +97,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             var x: CGFloat = 0
             for (i, text) in texts.enumerated() {
                 let w = widths[i]
-                let badgeRect = NSRect(x: x, y: 0, width: w, height: height)
 
-                let path = NSBezierPath(roundedRect: badgeRect, xRadius: radius, yRadius: radius)
-                bg.setFill()
-                path.fill()
-
-                let textAttrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: orange]
+                let textAttrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.labelColor]
                 let textSize = (text as NSString).size(withAttributes: textAttrs)
                 let tx = x + (w - textSize.width) / 2
                 let ty = (height - textSize.height) / 2
@@ -254,7 +246,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     func openPanel() {
-        DispatchQueue.main.async { self.accountsManager.updatePercentagesForAll() }
+        DispatchQueue.main.async {
+            self.accountsManager.updatePercentagesForAll()
+            self.accountsManager.animationSeed = UUID()
+        }
         NSApp.activate(ignoringOtherApps: true)
         panel.makeKeyAndOrderFront(nil)
         eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
