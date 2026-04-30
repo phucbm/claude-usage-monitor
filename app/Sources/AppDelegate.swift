@@ -85,10 +85,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
         let attrs: [NSAttributedString.Key: Any] = [.font: font]
 
+        let showReset = accountsManager.showResetTime
         let texts: [String] = accounts.map { account in
             let letter = String(account.label.prefix(1)).uppercased()
             let pct = account.hasFetchedData ? "\(Int(account.sessionPercentage * 100))%" : "--"
-            return "\(letter) \(pct)"
+            let reset = showReset ? timeToReset(account.sessionResetsAt) : ""
+            return reset.isEmpty ? "\(letter) \(pct)" : "\(letter) \(pct) \(reset)"
         }
         let widths = texts.map { ($0 as NSString).size(withAttributes: attrs).width + hPad * 2 }
         let totalWidth = widths.reduce(0, +) + CGFloat(max(0, accounts.count - 1)) * spacing
@@ -110,6 +112,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
         image.isTemplate = false
         return image
+    }
+
+    private func timeToReset(_ date: Date?) -> String {
+        guard let date = date else { return "" }
+        let secs = date.timeIntervalSinceNow
+        guard secs > 0 else { return "" }
+        let h = Int(secs) / 3600
+        let m = (Int(secs) % 3600) / 60
+        return h > 0 ? "\(h)h\(m)m" : "\(m)m"
     }
 
     // MARK: - Panel Setup

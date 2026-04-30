@@ -8,6 +8,7 @@ class AccountsManager: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var openAtLogin: Bool = false
     @Published var shortcutEnabled: Bool = true
+    @Published var showResetTime: Bool = true
     @Published var isAccessibilityEnabled: Bool = false
     @Published var animationSeed: UUID = UUID()
 
@@ -53,11 +54,15 @@ class AccountsManager: ObservableObject {
         shortcutEnabled = UserDefaults.standard.object(forKey: "shortcut_enabled") == nil
             ? true
             : UserDefaults.standard.bool(forKey: "shortcut_enabled")
+        showResetTime = UserDefaults.standard.object(forKey: "show_reset_time") == nil
+            ? true
+            : UserDefaults.standard.bool(forKey: "show_reset_time")
     }
 
     func saveSettings() {
         UserDefaults.standard.set(openAtLogin, forKey: "open_at_login")
         UserDefaults.standard.set(shortcutEnabled, forKey: "shortcut_enabled")
+        UserDefaults.standard.set(showResetTime, forKey: "show_reset_time")
         UserDefaults.standard.synchronize()
     }
 

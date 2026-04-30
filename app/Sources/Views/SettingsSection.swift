@@ -35,6 +35,26 @@ struct SettingsSection: View {
             Rectangle().fill(T.ink.opacity(0.08)).frame(height: T.border)
 
             settingRow(
+                title: "Show Reset Time",
+                subtitle: "Display time until session resets in the menu bar (e.g. P 40% 1h20m)"
+            ) {
+                Toggle("", isOn: Binding(
+                    get: { accountsManager.showResetTime },
+                    set: { v in
+                        accountsManager.showResetTime = v
+                        accountsManager.saveSettings()
+                        (NSApplication.shared.delegate as? AppDelegate)?.refreshMenuBar()
+                    }
+                ))
+                .toggleStyle(.switch)
+                .labelsHidden()
+                .scaleEffect(0.75)
+                .frame(height: 20)
+            }
+
+            Rectangle().fill(T.ink.opacity(0.08)).frame(height: T.border)
+
+            settingRow(
                 title: "Keyboard Shortcut (⌘U)",
                 subtitle: "Toggle popup from anywhere. Disable if it conflicts with other apps."
             ) {
