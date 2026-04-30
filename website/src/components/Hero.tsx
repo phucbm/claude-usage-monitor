@@ -28,10 +28,10 @@ export default function Hero() {
   return (
     <section id="hero" className="border-b-2 border-ink">
       <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-end py-[40px] md:pt-16 md:pb-14">
+        <div className="grid grid-cols-12 gap-6 md:gap-8 items-end py-[40px] md:pt-16 md:pb-14">
 
           {/* Text */}
-          <div>
+          <div className="col-span-12 md:col-span-8">
             <p className="font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-primary mb-[18px]">
               {t.hero.badge}
             </p>
@@ -53,15 +53,15 @@ export default function Hero() {
               {t.hero.meta}
             </p>
             <a href="https://launch.j2team.dev/products/claude-usage-monitor" target="_blank" rel="noopener noreferrer" className="inline-block mt-4">
-              <img src="https://launch.j2team.dev/badge/claude-usage-monitor/light" alt="Claude Usage Monitor - Launched on J2TEAM Launch" width="200" height="43" loading="lazy" />
+              <img src="https://launch.j2team.dev/badge/claude-usage-monitor/neutral" alt="Claude Usage Monitor - Launched on J2TEAM Launch" width="200" height="43" loading="lazy" />
             </a>
           </div>
 
           {/* Mockup panel */}
-          <div className="mockup-panel justify-self-stretch md:justify-self-end shrink-0">
+          <div className="mockup-panel col-span-12 md:col-span-4 flex flex-col">
 
             {/* Mockup menu bar */}
-            <div className="w-full max-w-[340px] h-[26px] bg-ink/90 flex items-center justify-between px-3 mb-[-2px] border-2 border-ink">
+            <div className="w-full h-[26px] bg-ink/90 flex items-center justify-between px-3 mb-[-2px] border-2 border-ink">
               {/* Left: apple + app names */}
               <div className="flex items-center gap-3">
                 <span className="text-white/80 text-[11px]">&#63743;</span>
@@ -79,7 +79,7 @@ export default function Hero() {
               </div>
             </div>
 
-            <div className="border-2 border-ink bg-white w-full max-w-[340px]">
+            <div className="border-2 border-ink bg-white w-full">
 
               {/* Header */}
               <div className="border-b-2 border-ink py-[9px] px-4 flex justify-between items-center">
