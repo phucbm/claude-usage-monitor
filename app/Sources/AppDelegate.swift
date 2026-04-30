@@ -246,6 +246,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 
     func openPanel() {
+        accountsManager.fetchAllAccounts()
         DispatchQueue.main.async {
             self.accountsManager.updatePercentagesForAll()
             self.accountsManager.animationSeed = UUID()
