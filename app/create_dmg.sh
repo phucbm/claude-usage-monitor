@@ -1,8 +1,11 @@
 #!/bin/bash
 
 APP_NAME="ClaudeUsageMonitor"
-VERSION="1.0.0"
+VERSION=$(defaults read "$(pwd)/Info.plist" CFBundleShortVersionString)
 DMG_NAME="${APP_NAME}-${VERSION}"
+
+# Remove any existing DMGs for this app
+rm -f ${APP_NAME}-*.dmg
 
 TMP_DIR="dmg_temp"
 rm -rf "$TMP_DIR"
