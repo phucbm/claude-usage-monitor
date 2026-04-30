@@ -56,6 +56,28 @@ export default function Hero() {
 
           {/* Mockup panel */}
           <div className="mockup-panel justify-self-stretch md:justify-self-end shrink-0">
+
+            {/* Mockup menu bar */}
+            <div className="w-full max-w-[340px] h-[26px] bg-ink/90 flex items-center justify-between px-3 mb-[-2px] border-2 border-ink">
+              {/* Left: apple + app names */}
+              <div className="flex items-center gap-3">
+                <span className="text-white/80 text-[11px]">&#63743;</span>
+                <span className="font-mono text-[10px] font-bold text-white/60 tracking-wide">Finder</span>
+                <span className="font-mono text-[10px] text-white/30 tracking-wide">File</span>
+                <span className="font-mono text-[10px] text-white/30 tracking-wide">Edit</span>
+              </div>
+              {/* Right: badge + clock */}
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[10px] font-bold text-white tracking-wide">
+                  P {Math.round(s * 100)}% {r1}
+                </span>
+                <span className="font-mono text-[10px] font-bold text-white/50 tracking-wide">
+                  W {Math.round(s2 * 100)}% {r2}
+                </span>
+                <span className="font-mono text-[10px] text-white/40">9:41</span>
+              </div>
+            </div>
+
             <div className="border-2 border-ink bg-white w-full max-w-[340px]">
 
               {/* Header */}
