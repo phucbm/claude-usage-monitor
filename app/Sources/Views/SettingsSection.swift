@@ -84,6 +84,14 @@ struct SettingsSection: View {
 
             Rectangle().fill(T.ink.opacity(0.08)).frame(height: T.border)
 
+            settingRow(title: "Version", subtitle: "Claude Usage Monitor") {
+                Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—")
+                    .font(T.mono(12, weight: .bold))
+                    .foregroundColor(T.muted)
+            }
+
+            Rectangle().fill(T.ink.opacity(0.08)).frame(height: T.border)
+
             settingRow(title: "Open Source", subtitle: "MIT License — contributions welcome") {
                 Button(action: {
                     NSWorkspace.shared.open(URL(string: "https://github.com/phucbm/claude-usage-monitor")!)
