@@ -71,6 +71,36 @@ struct SettingsSection: View {
                 }
                 .padding(12)
             }
+
+            Spacer().frame(height: 16)
+
+            sectionHeader("ABOUT")
+
+            settingRow(title: "Author", subtitle: "github.com/phucbm") {
+                Link("@phucbm", destination: URL(string: "https://github.com/phucbm")!)
+                    .font(T.mono(12, weight: .bold))
+                    .foregroundColor(T.primary)
+            }
+
+            Rectangle().fill(T.ink.opacity(0.08)).frame(height: T.border)
+
+            settingRow(title: "Open Source", subtitle: "MIT License — contributions welcome") {
+                Button(action: {
+                    NSWorkspace.shared.open(URL(string: "https://github.com/phucbm/claude-usage-monitor")!)
+                }) {
+                    HStack(spacing: 5) {
+                        Text("★")
+                            .font(.system(size: 12))
+                        Text("STAR ON GITHUB")
+                            .font(T.mono(10, weight: .bold))
+                    }
+                    .foregroundColor(T.paper)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 7)
+                    .background(T.ink)
+                }
+                .buttonStyle(.plain)
+            }
         }
         .overlay(Rectangle().stroke(T.ink.opacity(0.18), lineWidth: T.border))
         .onAppear { applyAppearance(appearanceMode) }
