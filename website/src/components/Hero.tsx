@@ -52,6 +52,9 @@ export default function Hero() {
             <p className="mt-[14px] font-mono text-[11px] text-muted tracking-[0.06em]">
               {t.hero.meta}
             </p>
+            <a href="https://launch.j2team.dev/products/claude-usage-monitor" target="_blank" rel="noopener noreferrer" className="inline-block mt-4">
+              <img src="https://launch.j2team.dev/badge/claude-usage-monitor/light" alt="Claude Usage Monitor - Launched on J2TEAM Launch" width="200" height="43" loading="lazy" />
+            </a>
           </div>
 
           {/* Mockup panel */}
@@ -63,8 +66,6 @@ export default function Hero() {
               <div className="flex items-center gap-3">
                 <span className="text-white/80 text-[11px]">&#63743;</span>
                 <span className="font-mono text-[10px] font-bold text-white/60 tracking-wide">Finder</span>
-                <span className="font-mono text-[10px] text-white/30 tracking-wide">File</span>
-                <span className="font-mono text-[10px] text-white/30 tracking-wide">Edit</span>
               </div>
               {/* Right: badge + clock */}
               <div className="flex items-center gap-3">

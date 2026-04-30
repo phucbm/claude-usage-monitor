@@ -15,13 +15,18 @@ export default function CTABanner() {
             {t.cta.meta}
           </p>
         </div>
-        <div className="flex flex-col md:flex-row gap-[10px]">
-          <a href={RELEASES} target="_blank" rel="noopener noreferrer"
-            className="font-mono font-bold text-xs tracking-[0.08em] uppercase no-underline bg-paper text-ink py-[18px] px-8 border-2 border-paper transition-colors duration-100 hover:bg-ink hover:text-paper hover:border-ink"
-          >{t.cta.downloadBtn}</a>
-          <a href={GITHUB} target="_blank" rel="noopener noreferrer"
-            className="font-mono font-bold text-xs tracking-[0.08em] uppercase no-underline bg-transparent text-paper py-[18px] px-8 border-2 border-paper/50 transition-colors duration-100 hover:bg-paper/[0.12] hover:border-paper"
-          >{t.cta.githubBtn}</a>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row gap-[10px]">
+            <a href={RELEASES} target="_blank" rel="noopener noreferrer"
+              className="font-mono font-bold text-xs tracking-[0.08em] uppercase no-underline bg-paper text-ink py-[18px] px-8 border-2 border-paper transition-colors duration-100 hover:bg-ink hover:text-paper hover:border-ink"
+            >{t.cta.downloadBtn}</a>
+            <a href={GITHUB} target="_blank" rel="noopener noreferrer"
+              className="font-mono font-bold text-xs tracking-[0.08em] uppercase no-underline bg-transparent text-paper py-[18px] px-8 border-2 border-paper/50 transition-colors duration-100 hover:bg-paper/[0.12] hover:border-paper"
+            >{t.cta.githubBtn}</a>
+          </div>
+          <a href="https://launch.j2team.dev/products/claude-usage-monitor" target="_blank" rel="noopener noreferrer" className="inline-block self-start">
+            <img src="https://launch.j2team.dev/badge/claude-usage-monitor/light" alt="Claude Usage Monitor - Launched on J2TEAM Launch" width="200" height="43" loading="lazy" />
+          </a>
         </div>
       </div>
     </section>
