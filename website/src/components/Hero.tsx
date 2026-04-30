@@ -28,10 +28,10 @@ export default function Hero() {
   return (
     <section id="hero" className="border-b-2 border-ink">
       <div className="container">
-        <div className="grid grid-cols-12 gap-6 md:gap-8 items-end py-[40px] md:pt-16 md:pb-14">
+        <div className="grid grid-cols-12 gap-6 lg:gap-8 items-end py-[40px] lg:pt-16 lg:pb-14">
 
           {/* Text */}
-          <div className="col-span-12 md:col-span-8">
+          <div className="col-span-12 lg:col-span-8">
             <p className="font-mono text-[11px] font-bold tracking-[0.15em] uppercase text-primary mb-[18px]">
               {t.hero.badge}
             </p>
@@ -58,7 +58,7 @@ export default function Hero() {
           </div>
 
           {/* Mockup panel */}
-          <div className="mockup-panel col-span-12 md:col-span-4 flex flex-col">
+          <div className="mockup-panel col-span-12 lg:col-span-4 flex flex-col">
 
             {/* Mockup menu bar */}
             <div className="w-full h-[26px] bg-ink/90 flex items-center justify-between px-3 mb-[-2px] border-2 border-ink">
