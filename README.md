@@ -2,6 +2,9 @@
 
 > Track your Claude.ai usage across multiple accounts right from your Mac menu bar.
 
+<img align="left" src="https://launch.j2team.dev/badge/claude-usage-monitor/neutral" alt="Claude Usage Monitor - Launched on J2TEAM Launch" width="200" height="43"/>
+<img align="left" alt="Claude Usage Monitor - Multiple Claude.ai accounts tracked from your Mac menu bar. | Product Hunt" width="200" height="43" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1136430&amp;theme=neutral&amp;t=1777628906554"/>
+
 <img width="1280" height="720" alt="cum-screenshot" src="https://github.com/user-attachments/assets/48391321-1a78-4326-bfb9-5d110e2d39f0" />
 
 
