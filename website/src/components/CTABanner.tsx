@@ -29,7 +29,7 @@ export default function CTABanner() {
                    href="https://www.producthunt.com/products/claude-usage-monitor-3?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-claude-usage-monitor-3"
                    target="_blank" rel="noopener noreferrer"><img
                     alt="Claude Usage Monitor - Multiple Claude.ai accounts tracked from your Mac menu bar. | Product Hunt"
-                    width="250" height="54"
+                    width="200" height="43"
                     src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1136430&amp;theme=neutral&amp;t=1777628906554"/></a>
                 <a href="https://launch.j2team.dev/products/claude-usage-monitor" target="_blank"
                    rel="noopener noreferrer" className="inline-block">
