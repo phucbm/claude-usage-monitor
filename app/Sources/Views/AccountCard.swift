@@ -108,6 +108,7 @@ struct AccountCard: View {
                         .foregroundColor(billingColor)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
+                    Spacer()
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
