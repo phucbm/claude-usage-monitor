@@ -10,6 +10,7 @@
 ## Features
 
 - **Multi-account support** — Add multiple Claude accounts (Work, Personal, etc.), each with its own session and weekly usage bars
+- **Cloudflare bypass** — API calls routed through a hidden WebKit instance so Cloudflare bot protection doesn't block the app
 - **Keyboard shortcut** — Toggle popup with Cmd+U from anywhere
 - **Auto-refresh** — Updates every 5 minutes automatically
 - **Privacy-first** — All data (cookies, settings) stored locally in UserDefaults
@@ -70,6 +71,7 @@ cd app && ./create_dmg.sh
 
 - **SwiftUI** — Modern macOS UI framework
 - **AppKit** — Menu bar integration
+- **WebKit** — Hidden WKWebView for API calls (Cloudflare bypass)
 - **Carbon** — Global keyboard shortcut (Cmd+U)
 - **UserDefaults** — Local storage for accounts and settings
 
@@ -77,7 +79,7 @@ cd app && ./create_dmg.sh
 
 This app uses Claude.ai's internal API endpoints which may change without notice. It is not affiliated with or endorsed by Anthropic. Use at your own risk.
 
-**Inspired by [ClaudeUsageBar](https://github.com/Artzainnn/ClaudeUsageBar) by Artzainnn** — this fork adds multi-account support and a redesigned popup UI.
+**Inspired by [ClaudeUsageBar](https://github.com/Artzainnn/ClaudeUsageBar) by Artzainnn** — this fork adds multi-account support, a redesigned popup UI, and a Cloudflare bypass so the app keeps working even as Claude.ai tightens API security.
 
 ## License
 
