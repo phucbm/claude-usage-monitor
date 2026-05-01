@@ -1,5 +1,5 @@
-import { GITHUB, RELEASES } from '../constants'
-import { useLanguage } from '../contexts/language'
+import {GITHUB, RELEASES} from '../constants'
+import {useLanguage} from '../contexts/language'
 
 export default function CTABanner() {
   const { t } = useLanguage()
@@ -24,9 +24,20 @@ export default function CTABanner() {
               className="font-mono font-bold text-xs tracking-[0.08em] uppercase no-underline bg-transparent text-paper py-[18px] px-8 border-2 border-paper/50 transition-colors duration-100 hover:bg-paper/[0.12] hover:border-paper"
             >{t.cta.githubBtn}</a>
           </div>
-          <a href="https://launch.j2team.dev/products/claude-usage-monitor" target="_blank" rel="noopener noreferrer" className="inline-block self-start">
-            <img src="https://launch.j2team.dev/badge/claude-usage-monitor/light" alt="Claude Usage Monitor - Launched on J2TEAM Launch" width="200" height="43" loading="lazy" />
-          </a>
+            <div className="flex items-start gap-2 flex-wrap mt-4">
+                <a className="inline-block"
+                   href="https://www.producthunt.com/products/claude-usage-monitor-3?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-claude-usage-monitor-3"
+                   target="_blank" rel="noopener noreferrer"><img
+                    alt="Claude Usage Monitor - Multiple Claude.ai accounts tracked from your Mac menu bar. | Product Hunt"
+                    width="250" height="54"
+                    src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1136430&amp;theme=neutral&amp;t=1777628906554"/></a>
+                <a href="https://launch.j2team.dev/products/claude-usage-monitor" target="_blank"
+                   rel="noopener noreferrer" className="inline-block">
+                    <img src="https://launch.j2team.dev/badge/claude-usage-monitor/neutral"
+                         alt="Claude Usage Monitor - Launched on J2TEAM Launch" width="200" height="43"
+                         loading="lazy"/>
+                </a>
+            </div>
         </div>
       </div>
     </section>
