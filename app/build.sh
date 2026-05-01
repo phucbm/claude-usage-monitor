@@ -43,6 +43,7 @@ swiftc -parse-as-library -o "$APP_PATH/Contents/MacOS/ClaudeUsageMonitor_arm64" 
     $SOURCES \
     -framework SwiftUI \
     -framework AppKit \
+    -framework WebKit \
     -target arm64-apple-macos12.0
 
 # Compile for x86_64
@@ -50,6 +51,7 @@ swiftc -parse-as-library -o "$APP_PATH/Contents/MacOS/ClaudeUsageMonitor_x86_64"
     $SOURCES \
     -framework SwiftUI \
     -framework AppKit \
+    -framework WebKit \
     -target x86_64-apple-macos12.0
 
 # Universal binary
