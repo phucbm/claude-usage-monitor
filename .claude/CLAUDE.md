@@ -6,6 +6,7 @@
 - Build: `cd app && ./build.sh`
 - Hot-reload: `pkill -x ClaudeUsageMonitor; cd app && ./build.sh`
 - DMG: `cd app && ./create_dmg.sh`
+- Release: bump `CFBundleShortVersionString` + `CFBundleVersion` in `app/Info.plist`, commit, push, then `gh release create vX.Y.Z --title "vX.Y.Z" --notes "..."` and `gh release upload vX.Y.Z app/ClaudeUsageMonitor-X.Y.Z.dmg` — always attach the DMG
 
 ### Website (React + TypeScript + Vite)
 - Dev: `cd website && pnpm dev`
