@@ -13,6 +13,7 @@ struct AccountCard: View {
     @State private var isEditingLabel = false
     @State private var editLabel = ""
     @State private var showDeleteAlert = false
+    @State private var cookieCopied = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -68,7 +69,15 @@ struct AccountCard: View {
                     .scaleEffect(0.75)
                     .frame(height: 20)
 
+                    iconButton(cookieCopied ? "checkmark" : "doc.on.doc") {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(account.cookie, forType: .string)
+                        cookieCopied = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { cookieCopied = false }
+                    }
+                    .help("Copy cookie string")
                     iconButton("trash") { showDeleteAlert = true }
+                    .help("Delete this account")
                 }
             }
             .padding(.horizontal, 12)
